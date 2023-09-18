@@ -62,12 +62,12 @@ El programa permite a los usuarios realizar las siguientes acciones:
 
 **Opción 1:**
 
-- Compilar el programa en terminal con: g++ Nutricion.cpp -o **programa** (*nombre deseado*)
+- Compilar el programa en terminal con: g++ main.cpp -o **programa** (*nombre deseado*)
 - Correr el programa en consola con: **programa**.exe
 
 **Opción 2:**
 
-- Compilar el programa en terminal con: g++ Nutricion.cpp
+- Compilar el programa en terminal con: g++ main.cpp
 
 - Correr el programa en consola con: a.exe
 
