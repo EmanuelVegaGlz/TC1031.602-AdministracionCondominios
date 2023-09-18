@@ -106,7 +106,7 @@ void Administracion::agregarResidente(Residente* resi){
     int nCasa(resi->getNumCasa());
     int casaValida = busquedaBinaria(nCasa);
     while (casaValida != -1){
-        cout << "Numero de casa ya registrado, favor de ingresar otro: " << endl;
+        cout << "Numero de casa ya registrado, favor de ingresar otro (Solo numero): " << endl;
         cin >> nCasa;
         resi->setNumCasa(nCasa);
         casaValida = busquedaBinaria(nCasa);
@@ -241,7 +241,7 @@ int Administracion::busquedaBinaria(int numCasa){
  */
 int Administracion::validaBusqueda(int resBusqueda){
     while (resBusqueda == -1){
-        cout << "Numero de casa no encontrado, favor de ingresar otro: " << endl;
+        cout << "Numero de casa no encontrado, favor de ingresar otro (Solo numero): " << endl;
         cin >> resBusqueda;
         resBusqueda = busquedaBinaria(resBusqueda);
     }
@@ -272,11 +272,11 @@ void Administracion::reservarAmenidad(int numCasa, int iAm){
              << amenidad[iAm]->getNombre() << " son: " << endl;
         amenidad[iAm]->horariosDisponibles();
 
-        cout << "Favor de ingresar el numero de asistentes: " << endl;
+        cout << "Favor de ingresar el numero de asistentes (Solo numero): " << endl;
         int asis;
         cin >> asis;
 
-        cout << "Favor de elegir el indice del horario: " << endl;
+        cout << "Favor de elegir el indice del horario (Solo numero): " << endl;
         int iHorario;
         cin >> iHorario;
 

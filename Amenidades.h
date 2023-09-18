@@ -153,7 +153,7 @@ void Amenidades::cambioDia(){
  */
 int Amenidades::validaHorario(int i){
     while (reservaciones[i] == true || i > horarios.size()){
-    cout << "Horario no disponible, favor de eligir otro: " << endl;
+    cout << "Horario no disponible, favor de eligir otro (Solo numero): " << endl;
     horariosDisponibles();
     cin >> i;
 }
@@ -169,7 +169,7 @@ return i;
 int Amenidades::validaCapacidad(int asis){
     while (asis > capacidad){
         cout << "Capacidad exedida, maximo " << capacidad << endl
-             << "Favor de intentar de nuevo: " << endl;
+             << "Favor de intentar de nuevo (Solo numero): " << endl;
         cin >> asis;
     }
     return asis;
@@ -367,12 +367,12 @@ tm Salon::getFecha() {
 
 string Salon::reservarHorario(int horaInicio, int asis) {
     horaInicio = validaHorario(horaInicio);
-    cout << "Favor de elegir el indice de la hora de fin: " << endl;
+    cout << "Favor de elegir el indice de la hora de fin (Solo numero): " << endl;
     int fin;
     cin >> fin;
     fin = validaHorario(fin);
 
-    cout << "Favor de ingresar la fecha de la reservacion AAAA/MM/DD:" << endl
+    cout << "Favor de ingresar la fecha de la reservacion AAAA/MM/DD (Solo numero):" << endl
          << "Year: ";
     tm date;
     cin.ignore();

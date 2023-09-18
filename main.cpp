@@ -17,6 +17,16 @@
 # include <sstream>
 using namespace std;
 
+
+/**
+ * Funcion que valida que la opcion ingresada por el usuario este dentro de los parametros
+ * 
+ * @param opcion: opcion ingresada por el usuario
+ * @param min: valor minimo que puede tener la opcion
+ * @param max: valor maximo que puede tener la opcion
+ * 
+ * @return opcion: opcion validada
+ */
 int validaOpcion(int opcion, int min, int max){
     while(opcion < min || opcion > max){
         cout << "Opcion invalida, intente de nuevo: ";
@@ -66,9 +76,9 @@ int main(){
          << "8. Ver solo las reservaciones de un residente" << endl;
 
     cout << menu.str()
-         << "\nOpcion: ";
+         << "\nOpcion (Solo numero): ";
     menu << "Otro Numero. Salir" << endl << endl
-         << "Opcion: ";
+         << "Opcion: (Solo numero)";
     cin >> opcion;
 
     admin.formatoImpresion();
@@ -83,7 +93,7 @@ string contact;
                 cout << "Como quiere que se despliequen:" << endl
                      << "1. Por numero de casa" << endl
                      << "2. Por saldo a pagar" << endl << endl
-                     << "Opcion: ";
+                     << "Opcion (Solo numero): ";
                 int orden;
                 cin >> orden;
                 orden = validaOpcion(orden, 1, 2);
@@ -105,14 +115,14 @@ string contact;
                 cout << "\nDar de alta a un residente" << endl;
                 int numCasa;
                 float saldo;
-                cout << "Numero de casa: ";
+                cout << "Numero de casa (Solo numero): ";
                 cin >> numCasa;
                 cout << "Nombre del propietario: ";
                 cin.ignore();
                 getline(cin, prop);
                 cout << "Contacto: ";
                 getline(cin, contact);
-                cout << "Saldo: ";
+                cout << "Saldo (Solo numero): ";
                 cin >> saldo;
                 admin.agregarResidente(new Residente(numCasa, prop, contact, saldo));
 
@@ -124,9 +134,9 @@ string contact;
                 cout << "\nRegistrar un pago de un residente" << endl;
                 int numCasaPago;
                 float pago;
-                cout << "Numero de casa: ";
+                cout << "Numero de casa (Solo numero): ";
                 cin >> numCasaPago;
-                cout << "Pago: ";
+                cout << "Pago (Solo numero): ";
                 cin >> pago;
                 admin.pagarSaldo(numCasaPago, pago);
                 break;
@@ -141,13 +151,13 @@ string contact;
                 cout << "\nReservar una amenidad" << endl;
                 int numCasaReserva;
                 int amenidad;
-                cout << "Numero de casa: ";
+                cout << "Numero de casa (Solo numero): ";
                 cin >> numCasaReserva;
                 cout << "Amenidad a reservar" << endl
                      << "1. Salon de fiestas" << endl
                      << "2. Alberca" << endl
                      << "3. Gimnasio" << endl << endl
-                     << "Opcion: ";
+                     << "Opcion (Solo numero): ";
                 cin >> amenidad;
                 validaOpcion(amenidad, 1, 3);
                 admin.reservarAmenidad(numCasaReserva, amenidad - 1);
@@ -156,7 +166,7 @@ string contact;
             case 7:
                 cout << "\nVer la informacion de un residente" << endl;
                 int numCasaInfo;
-                cout << "Numero de casa: ";
+                cout << "Numero de casa (Solo numero): ";
                 cin >> numCasaInfo;
                 admin.imprimirResidentes(numCasaInfo);
                 break;
@@ -164,7 +174,7 @@ string contact;
             case 8:
                 cout << "\nVer solo las reservaciones de un residente" << endl;
                 int numCasaReservaciones;
-                cout << "Numero de casa: ";
+                cout << "Numero de casa (Solo numero): ";
                 cin >> numCasaReservaciones;
                 admin.imprimirReservacionesResidente(numCasaReservaciones);
                 break;
