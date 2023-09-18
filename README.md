@@ -1,4 +1,10 @@
 # Programa de Administración de Condominio
+
+#### Proyecto - TC1030.304
+#### Profesor: Benjamín Valdés Aguirre
+#### Nombre: Emanuel Josué Vega González
+#### ID: A01710366
+
 El objetivo de este programa es solucionar un problema en un condominio, lo que se trata de solucionar es tener un sistema en el cual se puedan hacer reservaciones de las amenidades y que las personas que tienen atrasos en pagos de mantenimiento o multas no puedan hacer reservaciones. También el objetivo es darlos de alta conforme se firme el contrato con la nueva administración. Posteriormente en futuros avances se planea incluir temas de gestión de proveedores y de pagos, así como seguimiento de facturas mes a mes. En este avance se incluye solo algunos residentes para ejemplificar el funcionamiento del programa.
 
 ## SICT0301: Evalúa los componentes
@@ -50,14 +56,31 @@ El programa permite a los usuarios realizar las siguientes acciones:
 
 ## Instrucciones para el Usuario
 
+## Instrucciones
+- Descargar los archivos y colocarlos en una misma carpeta.
+- En consola ve a la ruta en donde se encuentran los archivos descomprimidos
+
+**Opción 1:**
+
+- Compilar el programa en terminal con: g++ Nutricion.cpp -o **programa** (*nombre deseado*)
+- Correr el programa en consola con: **programa**.exe
+
+**Opción 2:**
+
+- Compilar el programa en terminal con: g++ Nutricion.cpp
+
+- Correr el programa en consola con: a.exe
+
+*Nota: Esto es usando el compilador g++ de MinGW en Windows.*
+
 1. Al iniciar el programa, se mostrará un menú principal con varias opciones numeradas.
-2. Ingresa **solo** el número correspondiente a la opción que desea ejecutar y presione Enter.
+2. Ingresa **solo el número** correspondiente a la opción que desea ejecutar y presione Enter.
 3. Siga las instrucciones en pantalla para completar la operación seleccionada.
 4. El programa proporcionará retroalimentación y resultados de las operaciones realizadas.
 
 ## Restricciones para el Usuario
 
-1. Las entradas de datos deben ser válidas y seguir el formato especificado en las instrucciones.
+1. Las entradas de datos deben ser válidas y seguir el formato especificado en las instrucciones como el siguiente. *(solo numero)*.
 2. No se ingresar valores negativos para el número de casa.
 3. El saldo pendiente al ser negativo representa un saldo a favor
 4. ingresar solo el tipo de dato que el programa solicita
