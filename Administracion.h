@@ -36,6 +36,9 @@ class Administracion{
         float getPresupuesto();
         vector<Residente*> getResidentes();
 
+        // Setters
+        void setDeudas();
+
         //Metodos
         void agregarAmenidad(Amenidades* amenidad);
         void agregarResidente(Residente* residente);
@@ -144,6 +147,23 @@ vector<Residente*> Administracion::getResidentes(){
 }
 
 /**
+ * Metodo setDeudas
+ *
+ * @param
+ * @return
+ */
+void Administracion::setDeudas(){
+    float aux;
+    for (int i = 0; i < residente.size(); i++){
+        if (residente[i]->getSaldoAPagar() > 0){
+            aux += residente[i]->getSaldoAPagar();   
+        }
+        deudasResidentes = aux;
+    }
+}
+
+
+/**
  * Metodo ordenarResidentesCasa con Selection Sort
  * 
  * @param
@@ -177,7 +197,7 @@ void Administracion::ordenarResidentesSaldo() {
     for (int i = residente.size() - 1; i > 0; i--) {
         pos = 0;
         for (int j = 1; j <= i; j++) {
-            if (residente[j]->getSaldo() < residente[pos]->getSaldo()) {
+            if (residente[j]->getSaldoAPagar() < residente[pos]->getSaldoAPagar()) {
                 pos = j;
             }
         }
@@ -239,10 +259,11 @@ int Administracion::validaBusqueda(int resBusqueda){
  * @return
  */
 void Administracion::reservarAmenidad(int numCasa, int iAm){
+    ordenarResidentesCasa();
     int iRes = busquedaBinaria(numCasa);
     iRes = validaBusqueda(iRes);
 
-    if (residente[iRes]->getSaldo() < 0){
+    if (residente[iRes]->getSaldoAPagar() > 0){
         cout << "Favor de pagar el adeudo para reservar" << endl;
     }
 
@@ -250,64 +271,22 @@ void Administracion::reservarAmenidad(int numCasa, int iAm){
         cout << "Los horarios disponibles de " 
              << amenidad[iAm]->getNombre() << " son: " << endl;
         amenidad[iAm]->horariosDisponibles();
+
+        cout << "Favor de ingresar el numero de asistentes: " << endl;
+        int asis;
+        cin >> asis;
+
         cout << "Favor de elegir el indice del horario: " << endl;
         int iHorario;
         cin >> iHorario;
 
-        cout << "Favor de ingresar el numero de asistentes: " << endl;
-        int asis;
-        cin >> asis;
-
         string reserva = amenidad[iAm]->reservarHorario(iHorario, asis);
 
         residente[iRes]-> setAmenidadesReservadas(reserva);
+        setDeudas();
     }
 }
 
-/**
- * Metodo reservarSalon
- *
- * @param int numCasa
- * @param int horaInicio
- * @param int horaFin
- * @param int asis
- * @param string date
- * @return
- */
-void Administracion::reservarSalon(int numCasa){
-    int iRes = busquedaBinaria(numCasa);
-    iRes = validaBusqueda(iRes);
-
-    if (residente[iRes]->getSaldo() < 0){
-        cout << "Favor de pagar el adeudo para reservar" << endl;
-    }
-
-    else {
-
-        cout << "Los horarios disponibles de " 
-             << amenidad[2]->getNombre() << " son: " << endl;
-        amenidad[2]->horariosDisponibles();
-        cout << "Favor de elegir el indice de la hora de inicio: " << endl;
-        int inicio;
-        cin >> inicio;
-        cout << "Favor de elegir el indice de la hora de fin: " << endl;
-        int fin;
-        cin >> fin;
-
-        cout << "Favor de ingresar el numero de asistentes: " << endl;
-        int asis;
-        cin >> asis;
-
-        cout << "Favor de ingresar la fecha de la reservacion: " << endl;
-        string date;
-        getline(cin, date);
-
-        string reserva = amenidad[0]->reservarHorario(inicio, asis);
-        residente[iRes]-> setAmenidadesReservadas(reserva);
-
-        residente[iRes]->hacerCargo(amenidad[2]->getCosto());
-    }
-}
 
 /**
  * Metodo pagarSaldo
@@ -322,6 +301,7 @@ void Administracion::pagarSaldo(int numCasa, float pago){
 
     residente[iRes]->pagarSaldo(pago);
     deudasResidentes -= pago;
+    setDeudas();
 }
 
 /**
@@ -348,7 +328,7 @@ void Administracion::imprimirResidentes(){
          << "\t" << "Amenidades reservadas" << endl;
     for (int i = 0; i < residente.size(); i++){
         cout << residente[i]->getNumCasa() << "\t" << residente[i]->getNombre()
-             << "\t" << "\t" << residente[i]->getSaldo() << "\t" 
+             << "\t" << "\t" << residente[i]->getSaldoAPagar() << "\t" 
              << residente[i]->getTamAmenidadesReservadas() << endl;
     }
 }
@@ -364,11 +344,12 @@ void Administracion::imprimirResidentes(int Casa){
     int iRes = busquedaBinaria(Casa);
     iRes = validaBusqueda(iRes);
     
-    cout << "Numero de casa: " << residente[iRes]->getNumCasa() << endl
+    cout << "Informacion del residente: " << endl << endl
+         << "Numero de casa: " << residente[iRes]->getNumCasa() << endl
          << "Nombre: " << residente[iRes]->getNombre() << endl
-         << "Saldo: " << residente[iRes]->getSaldo() << endl
-         << "Amenidades reservadas: " << endl;
-    residente[iRes]->getTamAmenidadesReservadas();
+         << "Saldo: " << residente[iRes]->getSaldoAPagar() << endl
+         << "Amenidades reservadas: " << endl
+         << residente[iRes]->getTamAmenidadesReservadas();
     cout << endl;
 }
 

@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <ctime>
 using namespace std;
 
 
@@ -126,7 +127,7 @@ void Amenidades::horariosDisponibles(){
     cout << "Horarios disponibles: " << endl;
     for (int i = 0; i < horarios.size(); i++){
         if (reservaciones[i] == false){
-            cout << i << ": " << horarios[i] << endl;
+            cout << i << ": " << "\t" <<horarios[i] << endl;
         }
     }
 }
@@ -151,7 +152,7 @@ void Amenidades::cambioDia(){
  * @return int i
  */
 int Amenidades::validaHorario(int i){
-    while (reservaciones[i] == true && i > horarios.size()){
+    while (reservaciones[i] == true || i > horarios.size()){
     cout << "Horario no disponible, favor de eligir otro: " << endl;
     horariosDisponibles();
     cin >> i;
@@ -203,12 +204,13 @@ class Alberca : public Amenidades{
  */
 Alberca::Alberca(){
     nombre = "Alberca";
-    horarios = {"8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-                "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
-                "6:00 PM", "7:00 PM", "8:00 PM"};
-    reservaciones = {};
+    horarios = {"08:00 hrs", "09:00 hrs", "10:00 hrs", "11:00 hrs",
+                "12:00 hrs", "13:00 hrs", "14:00 hrs", "15:00 hrs", 
+                "16:00 hrs", "17:00 hrs", "18:00 hrs", "19:00 hrs",
+                "20:00 hrs"};
+    reservaciones.assign(horarios.size(), false);
     capacidad = 10;
-    asistentes = {};
+    asistentes.assign(horarios.size(), false);
     temperatura = 28;
 }
 
@@ -243,6 +245,7 @@ string Alberca::reservarHorario(int index, int asis){
     index = validaHorario(index);
     asis = validaCapacidad(asis);
 
+
     asistentes[index] = asis;
     reservaciones[index] = true;
 
@@ -250,7 +253,7 @@ string Alberca::reservarHorario(int index, int asis){
     detalle << "Amenidad: " << nombre << endl
             << "Horario: " << horarios[index] << endl
             << "Asistentes: " << asistentes[index] << endl
-            << "Temperatura del agua: " << temperatura << "°" << endl;
+            << "Temperatura del agua: " << temperatura << " grados" << endl;
     
     cout << "Reservacion exitosa" << endl;
     return detalle.str();
@@ -273,13 +276,13 @@ class Gym : public Amenidades{
  */
 Gym::Gym(){
     nombre = "Gym";
-    horarios = {"6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM",
-                "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM",
-                "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM",
-                "9:00 PM", "10:00 PM"};
-    reservaciones = {};
+    horarios = {"08:00 hrs", "09:00 hrs", "10:00 hrs", "11:00 hrs",
+                "12:00 hrs", "13:00 hrs", "14:00 hrs", "15:00 hrs",
+                "16:00 hrs", "17:00 hrs", "18:00 hrs", "19:00 hrs",
+                "20:00 hrs", "21:00 hrs", "22:00 hrs"};
+    reservaciones.assign(horarios.size(), false);
     capacidad = 6;
-    asistentes = {};
+    asistentes.assign(horarios.size(), false);
 }
 
 /**
@@ -308,7 +311,7 @@ string Gym::reservarHorario(int index, int asis){
 class Salon : public Amenidades{
     protected:
         float costo;
-        string fecha;
+        tm fecha;
 
     public:
         // Constructores
@@ -316,7 +319,7 @@ class Salon : public Amenidades{
 
         // Getters
         float getCosto();
-        string getFecha();
+        tm getFecha();
 
         string reservarHorario(int horaInicio, int asis);
 };
@@ -329,15 +332,23 @@ class Salon : public Amenidades{
  */
 Salon::Salon(){
     nombre = "Salon";
-    horarios = {"8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-                "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
-                "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM"
-                "11:00 PM", "12:00 AM"};
-    reservaciones = {};
+    horarios = {"08:00 hrs", "09:00 hrs", "10:00 hrs", "11:00 hrs",
+                "12:00 hrs", "13:00 hrs", "14:00 hrs", "15:00 hrs",
+                "16:00 hrs", "17:00 hrs", "18:00 hrs", "19:00 hrs",
+                "20:00 hrs", "21:00 hrs", "22:00 hrs", "23:00 hrs",
+                "00:00 hrs"};
+    reservaciones.assign(horarios.size(), false);
     capacidad = 50;
-    asistentes = {};
+    asistentes.assign(horarios.size(), false);
     costo = 500;
-    fecha = "01/01/2021";
+
+    fecha.tm_year = 121;
+    fecha.tm_mon = 0;   
+    fecha.tm_mday = 1;
+    fecha.tm_hour = 0;
+    fecha.tm_min = 0;
+    fecha.tm_sec = 0;
+   
 }
 
 /**
@@ -350,36 +361,34 @@ float Salon::getCosto(){
     return costo;
 }
 
-/**
- * Getter fecha
- *
- * @param
- * @return string fecha
- */
-string Salon::getFecha(){
+tm Salon::getFecha() {
     return fecha;
 }
 
-/**
- * Método ReservarHorario
- *
- * @param int horaInicio, int fin, int asis, string date
- * @return
- */
-string Salon::reservarHorario(int horaInicio, int asis){
+string Salon::reservarHorario(int horaInicio, int asis) {
     horaInicio = validaHorario(horaInicio);
-            cout << "Favor de elegir el indice de la hora de fin: " << endl;
-        int fin;
-        cin >> fin;
-        fin = validaHorario(fin);
+    cout << "Favor de elegir el indice de la hora de fin: " << endl;
+    int fin;
+    cin >> fin;
+    fin = validaHorario(fin);
 
-        cout << "Favor de ingresar la fecha de la reservacion: " << endl;
-        string date;
-        getline(cin, date);
+    cout << "Favor de ingresar la fecha de la reservacion AAAA/MM/DD:" << endl
+         << "Year: ";
+    tm date;
+    cin.ignore();
+    cin >> date.tm_year;
+    cout << "Month: ";
+    cin.ignore(); 
+    cin >> date.tm_mon; // Mes (1-12)
+    cout << "Day: ";
+    cin.ignore(); // Ignorar el carácter separador
+    cin >> date.tm_mday; // Día (1-31)
+    date.tm_year -= 1900; // Restar 1900 al año
+    date.tm_mon -= 1; // Restar 1 al mes, ya que en tm los meses van de 0 a 11
 
     asis = validaCapacidad(asis);
 
-    for (int i = horaInicio; i < fin; i++){
+    for (int i = horaInicio; i < fin; i++) {
         asistentes[i] = asis;
         reservaciones[i] = true;
     }
@@ -387,12 +396,16 @@ string Salon::reservarHorario(int horaInicio, int asis){
 
     stringstream detalle;
     detalle << "Amenidad: " << nombre << endl
-            << "Horario: " << horarios[horaInicio] << " - " << horarios[fin] << endl
+            << "Horario: " << horarios[horaInicio] << " - " 
+            << horarios[fin] << endl
             << "Asistentes: " << asistentes[horaInicio] << endl
             << "Costo: " << costo << endl
-            << "Fecha: " << fecha << endl;
+            << "Fecha: " << fecha.tm_mday << "/" << fecha.tm_mon + 1 << "/"
+            << fecha.tm_year + 1900 << endl;
 
-    cout << "Reservacion exitosa" << endl;
+    cout << "Reservacion exitosa" << endl
+         << detalle.str() << endl;
+
 
     return detalle.str();
 }

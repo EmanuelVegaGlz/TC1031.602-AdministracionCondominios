@@ -47,7 +47,7 @@ int main(){
 
     // Creacion de objetos de tipo Administracion
     Administracion admin = Administracion(instalaciones, propietarios, 0);
-
+    admin.setDeudas();
     admin.formatoImpresion();
 
     // Menu para que el usuario pueda interactuar con el programa
@@ -63,20 +63,19 @@ int main(){
          << "5. Ver el presupuesto del condominio" << endl
          << "6. Reservar una amenidad" << endl
          << "7. Ver la informacion de un residente" << endl
-         << "8. Ver solo las reservaciones de un residente" << endl
-         << "9. Ver las amenidades reservadas y los horarios disponibles" << endl;
+         << "8. Ver solo las reservaciones de un residente" << endl;
 
     cout << menu.str()
          << "\nOpcion: ";
-    menu << "10. Salir" << endl << endl
+    menu << "Otro Numero. Salir" << endl << endl
          << "Opcion: ";
     cin >> opcion;
 
     admin.formatoImpresion();
 
-    opcion = validaOpcion(opcion, 1, 9);
+    opcion = validaOpcion(opcion, 1, 8);
 
-    while(opcion > 0 && opcion < 10){
+    while(opcion > 0 && opcion < 9){
 string prop;
 string contact;
         switch(opcion){
@@ -147,13 +146,12 @@ string contact;
                 cout << "Amenidad a reservar" << endl
                      << "1. Salon de fiestas" << endl
                      << "2. Alberca" << endl
-                     << "3. Gimnasio" << endl
-                     << "Otro num. Salir" << endl << endl
+                     << "3. Gimnasio" << endl << endl
                      << "Opcion: ";
                 cin >> amenidad;
-                if(amenidad > 0 && amenidad < 4){
-                    admin.reservarAmenidad(numCasaReserva, amenidad);
-                }
+                validaOpcion(amenidad, 1, 3);
+                admin.reservarAmenidad(numCasaReserva, amenidad - 1);
+                
                 break;
             case 7:
                 cout << "\nVer la informacion de un residente" << endl;

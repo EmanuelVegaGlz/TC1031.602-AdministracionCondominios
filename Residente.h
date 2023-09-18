@@ -25,7 +25,7 @@ class Residente{
         int numCasa;
         string propietario;
         string contacto;
-        float saldo;
+        float saldoAPagar;
         vector<string> amenidadesReservadas;
 
     public:
@@ -38,7 +38,7 @@ class Residente{
         int getNumCasa();
         string getPropietario();
         string getContacto();
-        float getSaldo();
+        float getSaldoAPagar();
         string getAmenidadesReservadas(int i);
         int getTamAmenidadesReservadas();
 
@@ -66,7 +66,7 @@ Residente::Residente(){
     numCasa = 0;
     propietario = "";
     contacto = "";
-    saldo = 0;
+    saldoAPagar = 0;
     amenidadesReservadas = {};
 }
 
@@ -80,7 +80,7 @@ Residente::Residente(int num, string prop, string cont, float sal){
     numCasa = num;
     propietario = prop;
     contacto = cont;
-    saldo = sal;
+    saldoAPagar = sal;
     amenidadesReservadas = {};
 }
 
@@ -130,8 +130,8 @@ string Residente::getContacto(){
  * @param
  * @return float saldo
  */
-float Residente::getSaldo(){
-    return saldo;
+float Residente::getSaldoAPagar(){
+    return saldoAPagar;
 }
 
 /**
@@ -192,7 +192,7 @@ void Residente::setNumCasa(int num){
  * @return
  */
 void Residente::pagarSaldo(float pag){
-    saldo -= pag;
+    saldoAPagar -= pag;
 }
 
 /**
@@ -202,7 +202,7 @@ void Residente::pagarSaldo(float pag){
  * @return
  */
 void Residente::hacerCargo(float sal){
-    saldo += sal;
+    saldoAPagar += sal;
 }
 
 /**
@@ -224,7 +224,7 @@ void Residente::imprimirReservaciones(){
  * @return
  */
 void Residente::imprimirSaldo(){
-    cout << "Saldo a actual: " << saldo << endl;
+    cout << "Saldo a actual: " << saldoAPagar << endl;
 }
 
 /**
