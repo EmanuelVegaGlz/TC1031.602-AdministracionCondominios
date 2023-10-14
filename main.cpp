@@ -10,11 +10,13 @@
 
 #include "Amenidades.h"
 #include "Residente.h"
+#include "Arbol.h"
 #include "Administracion.h"
 # include <iostream>
 # include <string>
 # include <vector>
 # include <sstream>
+
 using namespace std;
 
 
@@ -43,7 +45,7 @@ int main(){
 
     vector<Amenidades*> instalaciones = {a1, a2, a3};
     
-
+    cout <<"Amenidades ok" << endl;
     // Creacion de objetos de tipo Residente
     Residente* r1 = new Residente(100, "Emanuel Vega", "55 1234 5678", 0);
     Residente* r2 = new Residente(22, "Juan Perez", "55 8765 4321", 2000);
@@ -53,12 +55,24 @@ int main(){
     Residente* r6 = new Residente(3, "Luis Hernandez", "55 5678 1234", -2500);
     Residente* r7 = new Residente(9, "Jose Martinez", "55 1234 5678", 0);
 
-    vector<Residente*> propietarios = {r1, r2, r3, r4, r5, r6, r7};
+    vector<Residente*> vectorPropietarios = {r1, r2, r3, r4, r5, r6, r7};
+    cout <<"Vector ok" << endl;
+    
+    AVLResidente propietarios;
+    cout <<"Objeto AVL ok" << endl;
+
+    for(int i = 0; i < vectorPropietarios.size(); i++){
+        propietarios.add(vectorPropietarios[i]);
+    }
+    cout <<"For ok" << endl;
 
     // Creacion de objetos de tipo Administracion
     Administracion admin = Administracion(instalaciones, propietarios, 0);
+    cout <<"Admin ok" << endl;
     admin.setDeudas();
+    cout <<"Deudas ok" << endl;
     admin.formatoImpresion();
+    cout <<"Formato ok" << endl;
 
     // Menu para que el usuario pueda interactuar con el programa
     int opcion;
@@ -101,11 +115,16 @@ string contact;
                 admin.formatoImpresion();
 
                 if(orden == 1){
-                    admin.ordenarResidentesCasa();
-                    admin.imprimirResidentes();
+                    cout << "Residentes en el sistema: " << endl << endl
+                    << "Casa" << "\t" << "Nombre" << "\t" << "\t" << "\t" 
+                    << "Saldo" << "\t" << "Amenidades reservadas" << endl;
+                    cout << admin.ordenarResidentesCasa();
+                    
                 } else {
-                    admin.ordenarResidentesSaldo();
-                    admin.imprimirResidentes();
+                    cout << "Residentes en el sistema: " << endl << endl
+                    << "Casa" << "\t" << "Nombre" << "\t" << "\t" << "\t" 
+                    << "Saldo" << "\t" << "Amenidades reservadas" << endl;
+                    cout << admin.ordenarResidentesSaldo();
                 }
 
                 break;

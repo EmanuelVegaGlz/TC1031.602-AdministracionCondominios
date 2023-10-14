@@ -13,6 +13,7 @@
 
 #include "Amenidades.h"
 #include "Residente.h"
+#include "Arbol.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -22,19 +23,19 @@ using namespace std;
 class Administracion{
     private:
         vector<Amenidades*> amenidad;
-        vector<Residente*> residente;
+        AVLResidente residente;
         float deudasResidentes;
         float presupuesto;
 
     public:
         // Constructores
         Administracion();
-        Administracion(vector<Amenidades*> amen, vector<Residente*> resi, float pres);
+        Administracion(vector<Amenidades*> amen, AVLResidente resi, float pres);
 
         // Getters
         float getDeudas();
         float getPresupuesto();
-        vector<Residente*> getResidentes();
+        AVLResidente getResidentes();
 
         // Setters
         void setDeudas();
@@ -42,17 +43,13 @@ class Administracion{
         //Metodos
         void agregarAmenidad(Amenidades* amenidad);
         void agregarResidente(Residente* residente);
-        void ordenarResidentesCasa();
-        void ordenarResidentesSaldo();
+        string ordenarResidentesCasa();
+        string ordenarResidentesSaldo();
 
-        int busquedaBinaria(int numCasa); 
-        int validaBusqueda(int resBusqueda);
         void reservarAmenidad(int numCasa, int iAm);
-        void reservarSalon(int numCasa);
         void pagarSaldo(int numCasa, float pago);
 
         void imprimirAmenidades();
-        void imprimirResidentes();
         void imprimirResidentes(int Casa);
         void imprimirReservacionesResidente(int i);
         void formatoImpresion();   
@@ -66,7 +63,7 @@ class Administracion{
  */
 Administracion::Administracion(){
     amenidad = {};
-    residente = {};
+    residente = AVLResidente();
     deudasResidentes = 0;
     presupuesto = 0;
 }
@@ -75,10 +72,10 @@ Administracion::Administracion(){
  * Constructor con parametros
  *
  * @param vector<Amenidades*> amen
- * @param vector<Residente*> resi
+ * @param AVL<Residente*> resi
  * @return Objeto de tipo Administracion
  */
-Administracion::Administracion(vector<Amenidades*> amen, vector<Residente*> resi, float pres){
+Administracion::Administracion(vector<Amenidades*> amen, AVLResidente resi, float pres){
     amenidad = amen;
     residente = resi;
     presupuesto = pres;
@@ -101,19 +98,16 @@ void Administracion::agregarAmenidad(Amenidades* ameni){
  * @param Residente* residente
  * @return
  */
-void Administracion::agregarResidente(Residente* resi){
-    ordenarResidentesCasa();
-    int nCasa(resi->getNumCasa());
-    int casaValida = busquedaBinaria(nCasa);
-    while (casaValida != -1){
+void Administracion::agregarResidente(Residente * resi){
+    bool validacion = residente.find(resi->getNumCasa());
+    while (validacion){
         cout << "Numero de casa ya registrado, favor de ingresar otro (Solo numero): " << endl;
+        int nCasa;
         cin >> nCasa;
         resi->setNumCasa(nCasa);
-        casaValida = busquedaBinaria(nCasa);
-
+        validacion = residente.find(resi->getNumCasa());
     }
-
-    residente.push_back(resi);
+    residente.add(resi);
 }
 
 /**
@@ -140,114 +134,42 @@ float Administracion::getPresupuesto(){
  * Metodo getResidentes
  *
  * @param
- * @return vector<Residente*> residente
+ * @return AVL<Residente*> residente
  */
-vector<Residente*> Administracion::getResidentes(){
+AVLResidente Administracion::getResidentes(){
     return residente;
 }
 
 /**
- * Metodo setDeudas
+ * Metodo setDeudas: Calcula la deudasResidentes, en base a los saldos de cada residente en el AVL
  *
  * @param
  * @return
  */
 void Administracion::setDeudas(){
-    float aux;
-    for (int i = 0; i < residente.size(); i++){
-        if (residente[i]->getSaldoAPagar() > 0){
-            aux += residente[i]->getSaldoAPagar();   
-        }
-        deudasResidentes = aux;
-    }
+    cout << "Calculando deudas..." << endl;
+    deudasResidentes = residente.calcularDeuda();
 }
 
-
 /**
- * Metodo ordenarResidentesCasa con Selection Sort
+ * Metodo ordenarResidentesCasa
  * 
  * @param
- * @return
+ * @return string inorderPorCasa
  */
-void Administracion::ordenarResidentesCasa() {
-    int pos;
-    for (int i = residente.size() - 1; i > 0; i--) {
-        pos = 0;
-        for (int j = 1; j <= i; j++) {
-            if (residente[j]->getNumCasa() > residente[pos]->getNumCasa()) {
-                pos = j;
-            }
-        }
-        if (pos != i) {
-            Residente* aux = residente[i];
-            residente[i] = residente[pos];
-            residente[pos] = aux;
-        }
-    }
+string Administracion::ordenarResidentesCasa() {
+    return residente.inorderPorCasa();
 }
 
 /**
  * Metodo ordenarResidentesSaldo con Selection Sort
  *
  * @param
- * @return
+ * @return string inorderPorSaldo
  */
-void Administracion::ordenarResidentesSaldo() {
-    int pos;
-    for (int i = residente.size() - 1; i > 0; i--) {
-        pos = 0;
-        for (int j = 1; j <= i; j++) {
-            if (residente[j]->getSaldoAPagar() < residente[pos]->getSaldoAPagar()) {
-                pos = j;
-            }
-        }
-        if (pos != i) {
-            Residente* aux = residente[i];
-            residente[i] = residente[pos];
-            residente[pos] = aux;
-        }
-    }
+string Administracion::ordenarResidentesSaldo() {
+    return residente.inorderPorSaldo();
 }
-
-/**
- * Metodo busquedaBinaria
- *
- * @param int numCasa
- * @return int i
- */
-int Administracion::busquedaBinaria(int numCasa){
-    int low = 0;
-    int high = residente.size() - 1;
-    int mid;
-
-    while (low <= high){
-        mid = (low + high) / 2;
-        if (residente[mid]->getNumCasa() == numCasa){
-            return mid;
-        } else if (residente[mid]->getNumCasa() > numCasa){
-            high = mid - 1;
-        } else {
-            low = mid + 1;
-        }
-    }
-    return -1;
-}
-
-/**
- * Metodo validaBusqueda
- *
- * @param int resBusqueda
- * @return int resBusqueda
- */
-int Administracion::validaBusqueda(int resBusqueda){
-    while (resBusqueda == -1){
-        cout << "Numero de casa no encontrado, favor de ingresar otro (Solo numero): " << endl;
-        cin >> resBusqueda;
-        resBusqueda = busquedaBinaria(resBusqueda);
-    }
-    return resBusqueda;
-}
-
 
 /**
  * Metodo reservarAmenidad
@@ -259,11 +181,13 @@ int Administracion::validaBusqueda(int resBusqueda){
  * @return
  */
 void Administracion::reservarAmenidad(int numCasa, int iAm){
-    ordenarResidentesCasa();
-    int iRes = busquedaBinaria(numCasa);
-    iRes = validaBusqueda(iRes);
+    if(residente.find(numCasa) == false){
+        cout << "Numero de casa no encontrado." << endl;
+        return;
+    }
 
-    if (residente[iRes]->getSaldoAPagar() > 0){
+    Residente * residenteModificado = residente.getResidente(numCasa);
+    if (residenteModificado->getSaldoAPagar() > 0){
         cout << "Favor de pagar el adeudo para reservar" << endl;
     }
 
@@ -282,7 +206,7 @@ void Administracion::reservarAmenidad(int numCasa, int iAm){
 
         string reserva = amenidad[iAm]->reservarHorario(iHorario, asis);
 
-        residente[iRes]-> setAmenidadesReservadas(reserva);
+        residenteModificado-> setAmenidadesReservadas(reserva);
         setDeudas();
     }
 }
@@ -296,11 +220,12 @@ void Administracion::reservarAmenidad(int numCasa, int iAm){
  * @return
  */
 void Administracion::pagarSaldo(int numCasa, float pago){
-    int iRes = busquedaBinaria(numCasa);
-    iRes = validaBusqueda(iRes);
-
-    residente[iRes]->pagarSaldo(pago);
-    deudasResidentes -= pago;
+    if(residente.find(numCasa) == false){
+        cout << "Numero de casa no encontrado." << endl;
+        return;
+    }
+    Residente * residenteModificado = residente.getResidente(numCasa);
+    residenteModificado->pagarSaldo(pago);
     setDeudas();
 }
 
@@ -317,39 +242,25 @@ void Administracion::imprimirAmenidades(){
 }
 
 /**
- * Metodo imprimirResidentes
- *
- * @param
- * @return
- */
-void Administracion::imprimirResidentes(){
-    cout << "Residentes en el sistema: " << endl << endl
-         << "Casa" << "\t" << "Nombre" << "\t" << "\t" << "\t" << "Saldo"
-         << "\t" << "Amenidades reservadas" << endl;
-    for (int i = 0; i < residente.size(); i++){
-        cout << residente[i]->getNumCasa() << "\t" << residente[i]->getNombre()
-             << "\t" << "\t" << residente[i]->getSaldoAPagar() << "\t" 
-             << residente[i]->getTamAmenidadesReservadas() << endl;
-    }
-}
-
-
-/**
  * Metodo imprimirResidente solo los datos de una casa
  *
  * @param int Casa
  * @return
  */
-void Administracion::imprimirResidentes(int Casa){
-    int iRes = busquedaBinaria(Casa);
-    iRes = validaBusqueda(iRes);
+void Administracion::imprimirResidentes(int casa){
+    if(residente.find(casa) == false){
+        cout << "Numero de casa no encontrado." << endl;
+        return;
+    }
+
+    Residente * residenteModificado = residente.getResidente(casa);
     
     cout << "Informacion del residente: " << endl << endl
-         << "Numero de casa: " << residente[iRes]->getNumCasa() << endl
-         << "Nombre: " << residente[iRes]->getNombre() << endl
-         << "Saldo: " << residente[iRes]->getSaldoAPagar() << endl
+         << "Numero de casa: " << residenteModificado->getNumCasa() << endl
+         << "Nombre: " << residenteModificado->getNombre() << endl
+         << "Saldo: " << residenteModificado->getSaldoAPagar() << endl
          << "Amenidades reservadas: " << endl
-         << residente[iRes]->getTamAmenidadesReservadas();
+         << residenteModificado->getTamAmenidadesReservadas();
     cout << endl;
 }
 
@@ -359,10 +270,14 @@ void Administracion::imprimirResidentes(int Casa){
  * @param int i
  * @return
  */
-void Administracion::imprimirReservacionesResidente(int i){
-    int iRes = busquedaBinaria(i);
-    iRes = validaBusqueda(iRes);
-    residente[iRes]->imprimirReservaciones();
+void Administracion::imprimirReservacionesResidente(int casa){
+    if(residente.find(casa) == false){
+        cout << "Numero de casa no encontrado." << endl;
+        return;
+    }
+
+    Residente * residenteModificado = residente.getResidente(casa);
+    residenteModificado->imprimirReservaciones();
 }
 
 /**

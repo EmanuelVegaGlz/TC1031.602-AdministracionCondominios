@@ -54,6 +54,10 @@ class Residente{
         void imprimirSaldo();
         void imprimirAmenidadesReservadas(int i);
 
+        friend class AVLResidente;
+        friend class Node;
+
+
 };
 
 /**
