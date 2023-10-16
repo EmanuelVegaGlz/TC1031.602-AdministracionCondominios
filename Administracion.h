@@ -23,19 +23,19 @@ using namespace std;
 class Administracion{
     private:
         vector<Amenidades*> amenidad;
-        AVLResidente residente;
+        BSTResidente *residente;
         float deudasResidentes;
         float presupuesto;
 
     public:
         // Constructores
         Administracion();
-        Administracion(vector<Amenidades*> amen, AVLResidente resi, float pres);
+        Administracion(vector<Amenidades*> amen, BSTResidente *resi, float pres);
 
         // Getters
         float getDeudas();
         float getPresupuesto();
-        AVLResidente getResidentes();
+        BSTResidente getResidentes();
 
         // Setters
         void setDeudas();
@@ -44,10 +44,9 @@ class Administracion{
         void agregarAmenidad(Amenidades* amenidad);
         void agregarResidente(Residente* residente);
         string ordenarResidentesCasa();
-        string ordenarResidentesSaldo();
-
         void reservarAmenidad(int numCasa, int iAm);
         void pagarSaldo(int numCasa, float pago);
+        bool buscarResidente(int numCasa);
 
         void imprimirAmenidades();
         void imprimirResidentes(int Casa);
@@ -63,7 +62,7 @@ class Administracion{
  */
 Administracion::Administracion(){
     amenidad = {};
-    residente = AVLResidente();
+    residente = new BSTResidente();
     deudasResidentes = 0;
     presupuesto = 0;
 }
@@ -75,7 +74,7 @@ Administracion::Administracion(){
  * @param AVL<Residente*> resi
  * @return Objeto de tipo Administracion
  */
-Administracion::Administracion(vector<Amenidades*> amen, AVLResidente resi, float pres){
+Administracion::Administracion(vector<Amenidades*> amen, BSTResidente *resi, float pres){
     amenidad = amen;
     residente = resi;
     presupuesto = pres;
@@ -99,15 +98,7 @@ void Administracion::agregarAmenidad(Amenidades* ameni){
  * @return
  */
 void Administracion::agregarResidente(Residente * resi){
-    bool validacion = residente.find(resi->getNumCasa());
-    while (validacion){
-        cout << "Numero de casa ya registrado, favor de ingresar otro (Solo numero): " << endl;
-        int nCasa;
-        cin >> nCasa;
-        resi->setNumCasa(nCasa);
-        validacion = residente.find(resi->getNumCasa());
-    }
-    residente.add(resi);
+    residente->add(resi);
 }
 
 /**
@@ -134,10 +125,10 @@ float Administracion::getPresupuesto(){
  * Metodo getResidentes
  *
  * @param
- * @return AVL<Residente*> residente
+ * @return BSTResidente residente
  */
-AVLResidente Administracion::getResidentes(){
-    return residente;
+BSTResidente Administracion::getResidentes(){
+    return *residente;
 }
 
 /**
@@ -147,8 +138,7 @@ AVLResidente Administracion::getResidentes(){
  * @return
  */
 void Administracion::setDeudas(){
-    cout << "Calculando deudas..." << endl;
-    deudasResidentes = residente.calcularDeuda();
+    deudasResidentes = residente->deudasResidentes();
 }
 
 /**
@@ -158,18 +148,9 @@ void Administracion::setDeudas(){
  * @return string inorderPorCasa
  */
 string Administracion::ordenarResidentesCasa() {
-    return residente.inorderPorCasa();
+    return residente->inorder();
 }
 
-/**
- * Metodo ordenarResidentesSaldo con Selection Sort
- *
- * @param
- * @return string inorderPorSaldo
- */
-string Administracion::ordenarResidentesSaldo() {
-    return residente.inorderPorSaldo();
-}
 
 /**
  * Metodo reservarAmenidad
@@ -181,12 +162,12 @@ string Administracion::ordenarResidentesSaldo() {
  * @return
  */
 void Administracion::reservarAmenidad(int numCasa, int iAm){
-    if(residente.find(numCasa) == false){
+    if(residente->find(numCasa) == false){
         cout << "Numero de casa no encontrado." << endl;
         return;
     }
 
-    Residente * residenteModificado = residente.getResidente(numCasa);
+    Residente * residenteModificado = residente->getResidente(numCasa);
     if (residenteModificado->getSaldoAPagar() > 0){
         cout << "Favor de pagar el adeudo para reservar" << endl;
     }
@@ -220,13 +201,23 @@ void Administracion::reservarAmenidad(int numCasa, int iAm){
  * @return
  */
 void Administracion::pagarSaldo(int numCasa, float pago){
-    if(residente.find(numCasa) == false){
+    if(residente->find(numCasa) == false){
         cout << "Numero de casa no encontrado." << endl;
         return;
     }
-    Residente * residenteModificado = residente.getResidente(numCasa);
+    Residente * residenteModificado = residente->getResidente(numCasa);
     residenteModificado->pagarSaldo(pago);
     setDeudas();
+}
+
+/**
+ * Metodo buscarResidente
+ *
+ * @param int numCasa
+ * @return bool
+ */
+bool Administracion::buscarResidente(int numCasa){
+    return residente->find(numCasa);
 }
 
 /**
@@ -248,12 +239,12 @@ void Administracion::imprimirAmenidades(){
  * @return
  */
 void Administracion::imprimirResidentes(int casa){
-    if(residente.find(casa) == false){
+    if(residente->find(casa) == false){
         cout << "Numero de casa no encontrado." << endl;
         return;
     }
 
-    Residente * residenteModificado = residente.getResidente(casa);
+    Residente * residenteModificado = residente->getResidente(casa);
     
     cout << "Informacion del residente: " << endl << endl
          << "Numero de casa: " << residenteModificado->getNumCasa() << endl
@@ -271,12 +262,12 @@ void Administracion::imprimirResidentes(int casa){
  * @return
  */
 void Administracion::imprimirReservacionesResidente(int casa){
-    if(residente.find(casa) == false){
+    if(residente->find(casa) == false){
         cout << "Numero de casa no encontrado." << endl;
         return;
     }
 
-    Residente * residenteModificado = residente.getResidente(casa);
+    Residente * residenteModificado = residente->getResidente(casa);
     residenteModificado->imprimirReservaciones();
 }
 

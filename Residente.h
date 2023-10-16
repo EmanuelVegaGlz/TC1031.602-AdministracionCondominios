@@ -31,6 +31,7 @@ class Residente{
     public:
         // Constructores
         Residente();
+        Residente(Residente* r);
         Residente(int num, string prop, string cont, float sal);
 
         // Getters
@@ -54,7 +55,7 @@ class Residente{
         void imprimirSaldo();
         void imprimirAmenidadesReservadas(int i);
 
-        friend class AVLResidente;
+        friend class BSTResidente;
         friend class Node;
 
 
@@ -72,6 +73,20 @@ Residente::Residente(){
     contacto = "";
     saldoAPagar = 0;
     amenidadesReservadas = {};
+}
+
+/**
+ * Constructor copia
+ *
+ * @param Residente* r
+ * @return Objeto de tipo Residente
+ */
+Residente::Residente(Residente* r){
+    numCasa = r->numCasa;
+    propietario = r->propietario;
+    contacto = r->contacto;
+    saldoAPagar = r->saldoAPagar;
+    amenidadesReservadas = r->amenidadesReservadas;
 }
 
 /**

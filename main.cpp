@@ -16,6 +16,10 @@
 # include <string>
 # include <vector>
 # include <sstream>
+#include <algorithm>
+#include <fstream>
+
+
 
 using namespace std;
 
@@ -39,47 +43,70 @@ int validaOpcion(int opcion, int min, int max){
 
 int main(){
     // Creacion de objetos de tipo Amenidades
+
     Amenidades* a1 = new Salon();
     Amenidades* a2 = new Alberca();
     Amenidades* a3 = new Gym();
 
     vector<Amenidades*> instalaciones = {a1, a2, a3};
     
-    cout <<"Amenidades ok" << endl;
-    // Creacion de objetos de tipo Residente
-    Residente* r1 = new Residente(100, "Emanuel Vega", "55 1234 5678", 0);
-    Residente* r2 = new Residente(22, "Juan Perez", "55 8765 4321", 2000);
-    Residente* r3 = new Residente(58, "Maria Lopez", "55 2468 1357", 350);
-    Residente* r4 = new Residente(5, "Pedro Sanchez", "55 1357 2468", 85);
-    Residente* r5 = new Residente(61, "Ana Garcia", "55 4321 8765", 29000);
-    Residente* r6 = new Residente(3, "Luis Hernandez", "55 5678 1234", -2500);
-    Residente* r7 = new Residente(9, "Jose Martinez", "55 1234 5678", 0);
 
-    vector<Residente*> vectorPropietarios = {r1, r2, r3, r4, r5, r6, r7};
-    cout <<"Vector ok" << endl;
-    
-    AVLResidente propietarios;
-    cout <<"Objeto AVL ok" << endl;
+    vector<Residente*> residentesVector;
 
-    for(int i = 0; i < vectorPropietarios.size(); i++){
-        propietarios.add(vectorPropietarios[i]);
+
+    ifstream archivoCSV("residentes.csv");
+    if (!archivoCSV) {
+        cerr << "No se pudo abrir el archivo CSV." << endl;
+        return 0;
     }
-    cout <<"For ok" << endl;
+
+    string linea;
+    // Lee y procesa cada línea del archivo CSV
+    while (getline(archivoCSV, linea)) {
+        istringstream ss(linea);
+        string campo;
+        vector<string> campos;
+
+        // Divide la línea en campos utilizando un delimitador (coma en este caso)
+        while (getline(ss, campo, ',')) {
+            campos.push_back(campo);
+        }
+
+        if (campos.size() >= 5) {
+            try {
+                // Convierte los campos necesarios al tipo adecuado
+                int numCasa = stoi(campos[0]);
+                string propietario = campos[1];
+                string contacto = campos[2];
+                float saldoAPagar = stof(campos[3]);
+
+                // Crea un objeto Residente con los datos del CSV
+                Residente *residente = new Residente(numCasa, propietario, contacto, saldoAPagar);
+
+                // Agrega el objeto Residente al árbol AVL
+                residentesVector.push_back(residente);
+            } catch (const exception& e) {
+                cerr << "Error al procesar línea: " << e.what() << endl;
+            }
+        }
+    }
+        archivoCSV.close();
+
+    
+    // Estrucutra de datos de tipo BST
+    BSTResidente *propietariosArbol = new BSTResidente(residentesVector);
 
     // Creacion de objetos de tipo Administracion
-    Administracion admin = Administracion(instalaciones, propietarios, 0);
-    cout <<"Admin ok" << endl;
+    Administracion admin = Administracion(instalaciones, propietariosArbol, 0);
     admin.setDeudas();
-    cout <<"Deudas ok" << endl;
     admin.formatoImpresion();
-    cout <<"Formato ok" << endl;
 
     // Menu para que el usuario pueda interactuar con el programa
     int opcion;
 
     stringstream menu;
-    menu << "\nBienvenido al sistema de administracion del condominio" << endl
-         << "Que desea hacer?" << endl
+    cout << "\nBienvenido al sistema de administracion del condominio" << endl;
+    menu << "Que desea hacer?" << endl
          << "1. Ver los residentes" << endl
          << "2. Dar de alta a un residente" << endl
          << "3. Registrar un pago de un residente" << endl
@@ -92,7 +119,7 @@ int main(){
     cout << menu.str()
          << "\nOpcion (Solo numero): ";
     menu << "Otro Numero. Salir" << endl << endl
-         << "Opcion: (Solo numero)";
+         << "Opcion: (Solo numero): ";
     cin >> opcion;
 
     admin.formatoImpresion();
@@ -104,28 +131,12 @@ string prop;
 string contact;
         switch(opcion){
             case 1:
-                cout << "Como quiere que se despliequen:" << endl
-                     << "1. Por numero de casa" << endl
-                     << "2. Por saldo a pagar" << endl << endl
-                     << "Opcion (Solo numero): ";
-                int orden;
-                cin >> orden;
-                orden = validaOpcion(orden, 1, 2);
-
                 admin.formatoImpresion();
 
-                if(orden == 1){
                     cout << "Residentes en el sistema: " << endl << endl
                     << "Casa" << "\t" << "Nombre" << "\t" << "\t" << "\t" 
                     << "Saldo" << "\t" << "Amenidades reservadas" << endl;
                     cout << admin.ordenarResidentesCasa();
-                    
-                } else {
-                    cout << "Residentes en el sistema: " << endl << endl
-                    << "Casa" << "\t" << "Nombre" << "\t" << "\t" << "\t" 
-                    << "Saldo" << "\t" << "Amenidades reservadas" << endl;
-                    cout << admin.ordenarResidentesSaldo();
-                }
 
                 break;
             
@@ -136,18 +147,24 @@ string contact;
                 float saldo;
                 cout << "Numero de casa (Solo numero): ";
                 cin >> numCasa;
-                cout << "Nombre del propietario: ";
-                cin.ignore();
-                getline(cin, prop);
-                cout << "Contacto: ";
-                getline(cin, contact);
-                cout << "Saldo (Solo numero): ";
-                cin >> saldo;
-                admin.agregarResidente(new Residente(numCasa, prop, contact, saldo));
+                if (admin.buscarResidente(numCasa)){
+                    cout << "Casa ya resgistrada!" << endl;
+                    break;
+                }
+                else{
+                    cout << "Nombre del propietario: ";
+                    cin.ignore();
+                    getline(cin, prop);
+                    cout << "Contacto: ";
+                    getline(cin, contact);
+                    cout << "Saldo (Solo numero): ";
+                    cin >> saldo;
+                    admin.agregarResidente(new Residente(numCasa, prop, contact, saldo));
 
-                cout << "Residente agregado con exito!" << endl;
+                    cout << "Residente agregado con exito!" << endl;
 
-                break;
+                    break;
+                }
 
             case 3:
                 cout << "\nRegistrar un pago de un residente" << endl;

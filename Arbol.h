@@ -7,6 +7,7 @@
  *
  * Clase AVLResidentes (Estructura de datos principal)  
  */
+
 #ifndef AVLRESIDENTES_H_
 #define AVLRESIDENTES_H_
 
@@ -14,104 +15,112 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "Residente.h"
 
 using namespace std;
 
-	class Node {
-	private:
-		Residente *value;
-		Node *left, *right;
-		int level, balance;
-		Node* predecesor();
+class Node {
+private:
+    Residente *residente;
+    Node *left, *right;
+    Node* succesor();
 
-	public:
-		Node(Residente *val):
-			value(val), left(0), right(0), level(0), balance(0) {}
+public:
+    Node(Residente*);
+    Node(Residente*, Node*, Node*);
+    void add(Residente*);
+	void add(Node*&, Residente*);
+    bool find(int);
+    void remove(Residente*);
+    void removeChilds();
+    void inorder(stringstream&) const;
+    void inorderSaldo(stringstream&) const;
+    void preorder(stringstream&) const;
+	void addVector(Node*&, vector<Residente*>&, int, int);
+	Node* sortedArrayToBST(vector<Residente*>&);
+    friend class BSTResidente;
+};
 
-		Node* add(Residente *val);
-		bool find(int);
-		void remove(int);
-		void removeChilds();
-		void inorderImprimirPorCasa(stringstream&) const;
-		void inorderImprimirPorSaldo(stringstream&) const;
-		void preorder(stringstream&) const;
-		int max_depth();
-		Node* check_tree(Residente*, Node*, bool*);
-		Node* balance_tree();
-		Node* rot_left(Node* );
-		Node* rot_right(Node* );
-		Node* rot_left_right(Node* );
-		Node* rot_right_left(Node* );
-		friend class AVLResidente;
-	};
+Node::Node(Residente *resi) : residente(resi), left(0), right(0) {}
 
-Node* Node::add(Residente *val) {
-    if (val->getNumCasa() < value->getNumCasa()) {
+Node::Node(Residente *resi, Node *le, Node *ri)
+    : residente(resi), left(le), right(ri) {}
+
+void Node::add(Residente *residenteNuevo) {
+    if (residenteNuevo->getNumCasa() < residente->getNumCasa()) {
         if (left != 0) {
-            left->add(val);
+            left->add(residenteNuevo);
         } else {
-            left = new Node(val);
+            left = new Node(residenteNuevo);
         }
     } else {
         if (right != 0) {
-            right->add(val);
+            right->add(residenteNuevo);
         } else {
-            right = new Node(val);
+            right = new Node(residenteNuevo);
         }
+    }
+}
+
+void Node::add(Node*& root, Residente *resi) {
+	 if (root == 0) {
+        root = new Node(resi);
+    } else if (resi->getNumCasa() < root->residente->getNumCasa()) {
+        add(root->left, resi);
+    } else {
+        add(root->right, resi);
     }
 }
 
 bool Node::find(int numCasa) {
-    if (numCasa == value->getNumCasa()) {
+    if (numCasa == residente->getNumCasa()) {
         return true;
-    } else if (numCasa < value->getNumCasa()) {
+    } else if (numCasa < residente->getNumCasa()) {
         return (left != 0 && left->find(numCasa));
-    } else if (numCasa > value->getNumCasa()) {
+    } else if (numCasa > residente->getNumCasa()) {
         return (right != 0 && right->find(numCasa));
     }
-    return false;
 }
 
-Node* Node::predecesor() {
-    Node *le, *ri;
+Node* Node::succesor() {
+	Node *le, *ri;
 
-    le = left;
-    ri = right;
+	le = left;
+	ri = right;
 
-    if (left == 0) {
-        if (right != 0) {
-            right = 0;
-        }
-        return ri;
-    }
+	if (left == 0) {
+		if (right != 0) {
+			right = 0;
+		}
+		return ri;
+	}
 
-    if (left->right == 0) {
-        left = left->left;
-        le->left = 0;
-        return le;
-    }
+	if (left->right == 0) {
+		left = left->left;
+		le->left = 0;
+		return le;
+	}
 
-    Node *parent, *child;
-    parent = left;
-    child = left->right;
-    while (child->right != 0) {
-        parent = child;
-        child = child->right;
-    }
-    parent->right = child->left;
-    child->left = 0;
-    return child;
+	Node *parent, *child;
+	parent = left;
+	child = left->right;
+	while (child->right != 0) {
+		parent = child;
+		child = child->right;
+	}
+	parent->right = child->left;
+	child->left = 0;
+	return child;
 }
 
-void Node::remove(int numCasa) {
-	Node * succ, *old;
-
-	if (numCasa < value->getNumCasa()) {
+void Node::remove(Residente *residenteBorrar) {
+	Node *succ, *old;
+	if (residenteBorrar->getNumCasa() < residente->getNumCasa()) {
 		if (left != 0) {
-			if (left->value->getNumCasa() == numCasa) {
+			if (left->residente->getNumCasa() == residenteBorrar->getNumCasa()) {
 				old = left;
-				succ = left->predecesor();
+				succ = left->succesor();
 				if (succ != 0) {
 					succ->left = old->left;
 					succ->right = old->right;
@@ -119,14 +128,14 @@ void Node::remove(int numCasa) {
 				left = succ;
 				delete old;
 			} else {
-				left->remove(numCasa);
+				left->remove(residenteBorrar);
 			}
 		}
-	} else if (numCasa > value->getNumCasa()) {
+	} else if (residenteBorrar->getNumCasa() > residente->getNumCasa()) {
 		if (right != 0) {
-			if (right->value->getNumCasa() == numCasa) {
+			if (right->residente->getNumCasa() == residenteBorrar->getNumCasa()) {
 				old = right;
-				succ = right->predecesor();
+				succ = right->succesor();
 				if (succ != 0) {
 					succ->left = old->left;
 					succ->right = old->right;
@@ -134,252 +143,150 @@ void Node::remove(int numCasa) {
 				right = succ;
 				delete old;
 			} else {
-				right->remove(numCasa);
+				right->remove(residenteBorrar);
 			}
 		}
 	}
 }
 
 void Node::removeChilds() {
-	if (left != 0) {
-		left->removeChilds();
-		delete left;
-		left = 0;
-	}
-	if (right != 0) {
-		right->removeChilds();
-		delete right;
-		right = 0;
-	}
-}
-
-void Node::inorderImprimirPorCasa(std::stringstream &aux) const {
     if (left != 0) {
-        left->inorderImprimirPorCasa(aux);
+        left->removeChilds();
+        delete left;
+        left = 0;
     }
-    if (aux.tellp() != 1) {
-        aux << "\n";
-    }
-    aux << value->getNumCasa() << "\t" << value->getNombre()
-             << "\t" << "\t" << value->getSaldoAPagar() << "\t" 
-             << value->getTamAmenidadesReservadas() << endl;
     if (right != 0) {
-        right->inorderImprimirPorCasa(aux);
+        right->removeChilds();
+        delete right;
+        right = 0;
     }
 }
 
-void Node::inorderImprimirPorSaldo(std::stringstream &aux) const {
+void Node::inorder(stringstream &aux) const {
     if (left != 0) {
-        left->inorderImprimirPorSaldo(aux);
+        left->inorder(aux);
     }
     if (aux.tellp() != 1) {
-        aux << "\n";
+        aux << " ";
     }
-    aux << value->getNumCasa() << "\t" << value->getNombre()
-             << "\t" << "\t" << value->getSaldoAPagar() << "\t" 
-             << value->getTamAmenidadesReservadas() << endl;
+
+	aux << residente->getNumCasa() << "\t" << residente->getNombre()
+             << "\t" << "\t" << residente->getSaldoAPagar() << "\t" 
+             << residente->getTamAmenidadesReservadas() << endl;
+
     if (right != 0) {
-        right->inorderImprimirPorSaldo(aux);
+        right->inorder(aux);
+    }
+}
+
+
+
+void Node::inorderSaldo(stringstream &aux) const {
+    if (left != 0) {
+        left->inorderSaldo(aux);
+    }
+    if (aux.tellp() != 1) {
+        aux << " ";
+    }
+
+    aux << residente->getNumCasa() << "\t" << residente->getNombre()
+             << "\t" << "\t" << residente->getSaldoAPagar() << "\t" 
+             << residente->getTamAmenidadesReservadas() << endl;
+
+    if (right != 0) {
+        right->inorderSaldo(aux);
     }
 }
 
 void Node::preorder(stringstream &aux) const {
-	aux << "(" << value << " " << level << " " << balance << ")";
-	if (left != 0) {
-		aux << " ";
-		left->preorder(aux);
-	}
-	if (right != 0) {
-		aux << " ";
-		right->preorder(aux);
-	}
-}
-
-int Node::max_depth() {
-	int le =0 , ri = 0;
-	if (left != 0)
-		le = left->max_depth() + 1;
-	if (right != 0)
-		ri = right->max_depth() + 1;
-	if(le > ri)
-		level = le;
-	else
-		level = ri;
-	balance = le - ri;
-	return level;
-}
-
-Node* Node::check_tree(Residente* check, Node* parent, bool* checked) {
-    if (*checked) {
-        return 0;
+    aux << residente->getNumCasa();
+    if (left != 0) {
+        aux << " ";
+        left->preorder(aux);
     }
-
-    Node *a = 0;
-    if (balance > 1) {
-        a = balance_tree();
-        *checked = true;
-
-        if (parent != 0) {
-            if (parent->left == this) {
-                parent->left = a;
-            } else if (parent->right == this) {
-                parent->right = a;
-            }
-        }
-    } else if (balance < -1) {
-        a = balance_tree();
-        *checked = true;
-
-        if (parent != 0) {
-            if (parent->left == this) {
-                parent->left = a;
-            } else if (parent->right == this) {
-                parent->right = a;
-            }
-        }
+    if (right != 0) {
+        aux << " ";
+        right->preorder(aux);
     }
+}
 
-    if (*checked) {
-        check = value;
+Node* Node::sortedArrayToBST(vector<Residente*>& residentes) {
+    Node* root = NULL;
+    addVector(root, residentes, 0, residentes.size() - 1);
+    return root;
+}
+
+void Node::addVector(Node*& root, vector<Residente*>& residentes, int start, int end) {
+    if (start > end) {
+        return;
     }
-
-    return a;
+    int mid = (start + end) / 2;
+    add(root, residentes[mid]);
+    addVector(root, residentes, start, mid - 1);
+    addVector(root, residentes, mid + 1, end);
 }
 
-Node* Node::balance_tree() {
-	Node *a = this, *le =left, *ri =right;
-	Residente* old_value = value;
-	cout<< "Balancing node : " << a->value << " " << endl;
-	if (balance > 0) {
-		if (le->balance > 0){
-			cout<< "rot_right  " << a->balance << " left: " << le->balance << endl;
-			a = rot_right(a);
-		}else{
-			cout<< "rot_left_right " << a->balance << " left: " << le->balance << endl;
-			a = rot_left_right(a);
-		}
-	}else{
-		if (ri->balance < 0){
-			cout<< "rot_left " << a->balance << " right: " << ri->balance << endl;
-			a = rot_left(a);
-		}else{
-			cout<< "rot_right_left " << a->balance << " right: " << ri->balance << endl;
-			a = rot_right_left(a);
-		}
-	}
-	cout<< "New current node value is " << a->value << endl;
-	return a;
-}
-
-Node* Node::rot_left(Node* a){
-	Node *b, *temp = 0;
-	if (a->right != 0){
-		b = a->right;
-		if (b->left != 0)
-			temp = b->left;
-		b->left = a;
-		if(temp != 0){
-			a->right = temp;
-		}else{
-			a->right = 0;
-		}
-	}
-	return b;
-}
-
-Node* Node::rot_right(Node* a){
-	Node *b, *temp = 0;
-	if (a->left != 0){
-		b = a->left;
-		if (b->right != 0)
-			temp = b->right;
-		b->right = a;
-		if(temp != 0){
-			a->left = temp;
-		}else{
-			a->left = 0;
-		}
-	}
-	return b;
-}
-
-Node* Node::rot_left_right(Node* a){
-	a->left = rot_left(a->left);
-	a = rot_right(a);
-	return a;
-}
-
-Node*  Node::rot_right_left(Node* a){
-	a->right = rot_right(a->right);
-	a = rot_left(a);
-	return a;
-}
-
-class AVLResidente {
+class BSTResidente {
 private:
-	Node *root;
+    Node *root;
 
 public:
-	AVLResidente();
-    AVLResidente(vector<Residente*> vec);
-	~AVLResidente();
-	bool empty() const;
+    BSTResidente();
+	BSTResidente(vector<Residente*>);
+    ~BSTResidente();
+    bool empty() const;
     void add(Residente*);
-	bool find(int) const;
-	void remove(int);
-	void removeAll();
-	string inorderPorCasa() const;
-    string inorderPorSaldo() const;
-	string preorder() const;
-    void recorrerYSumarSaldos(Node* current, float &totalDeudas);
-	float calcularDeuda();
+    bool find(int) const;
+    void remove(Residente *);
+    void removeAll();
+    string inorder() const;
+    string preorder() const;
+	float deudasResidentes();
+	float auxDeudas(Node*, float&);
 	Residente* getResidente(int numCasa);
-	void avlReservarAmenidad(int numCasa, string amenidad);
-	friend class Residente;
-    friend class Node;
+	Residente* buscarResidente(Node *, int);
 };
 
-AVLResidente::AVLResidente() : root(0) {}
+BSTResidente::BSTResidente() : root(0) {}
 
-AVLResidente::AVLResidente(vector<Residente*> vec) {
-    root = 0;
-    for (int i = 0; i < vec.size(); i++) {
-        if (root != 0) {
-            root = root->add(vec[i]);
+BSTResidente::BSTResidente(vector<Residente*> residentes) {
+	root = root->sortedArrayToBST(residentes);
+}
+
+BSTResidente::~BSTResidente() {
+    removeAll();
+}
+
+
+bool BSTResidente::empty() const {
+    return (root == 0);
+}
+
+void BSTResidente::add(Residente *nuevoResidente) {
+    if (root != 0) {
+		root->add(nuevoResidente);
+	} else {
+		root = new Node(nuevoResidente);
+	}
+}
+
+void BSTResidente::remove(Residente *residenteDelete) {
+    if (root != 0) {
+        if (residenteDelete->getNumCasa() == root->residente->getNumCasa()) {
+            Node *succ = root->succesor();
+            if (succ != 0) {
+                succ->left = root->left;
+                succ->right = root->right;
+            }
+            delete root;
+            root = succ;
         } else {
-            root = new Node(vec[i]);
+            root->remove(residenteDelete);
         }
     }
 }
 
- 
-
-AVLResidente::~AVLResidente() {
-	removeAll();
-}
-
-bool AVLResidente::empty() const {
-	return (root == 0);
-}
-
-
-void AVLResidente::add(Residente* val) {
-    if (root != 0) {
-        root = root->add(val);
-    } else {
-        root = new Node(val);
-    }
-}
-
-void AVLResidente::remove(int numCasa) {
-    if (root != 0) {
-        if (root->find(numCasa)) {
-            root->remove(numCasa);
-        }
-    }
-}
-
-void AVLResidente::removeAll() {
+void BSTResidente::removeAll() {
     if (root != 0) {
         root->removeChilds();
     }
@@ -387,75 +294,62 @@ void AVLResidente::removeAll() {
     root = 0;
 }
 
-bool AVLResidente::find(int numCasa) const {
-	if (root != 0) {
-		return root->find(numCasa);
-	} else {
-		return false;
-	}
-}
-
-string AVLResidente::inorderPorCasa() const {
-	stringstream aux;
-
-	aux << "[";
-	if (!empty()) {
-		root->inorderImprimirPorCasa(aux);
-	}
-	aux << "]";
-	return aux.str();
-}
-
-std::string AVLResidente::inorderPorSaldo() const {
-    std::stringstream result;
+bool BSTResidente::find(int numCasa) const {
     if (root != 0) {
-        root->inorderImprimirPorSaldo(result);
+        return root->find(numCasa);
+    } else {
+        return false;
     }
-    return result.str();
 }
 
-string AVLResidente::preorder() const {
-	std::stringstream aux;
+string BSTResidente::inorder() const {
+    stringstream aux;
+    aux << "";
+    if (!empty()) {
+        root->inorder(aux);
+    }
+    aux << "";
+    return aux.str();
+}
 
-	aux << "[";
-	if (!empty()) {
-		root->preorder(aux);
+string BSTResidente::preorder() const {
+    stringstream aux;
+    aux << "";
+    if (!empty()) {
+        root->preorder(aux);
+    }
+    aux << "";
+    return aux.str();
+}
+
+float BSTResidente::deudasResidentes() {
+	float aux = 0;
+	return auxDeudas(root, aux);
+}
+
+float BSTResidente::auxDeudas(Node *r, float &aux) {
+	if (r != 0) {
+		auxDeudas(r->left, aux);
+		aux += r->residente->getSaldoAPagar();
+		auxDeudas(r->right, aux);
 	}
-	aux << "]";
-	return aux.str();
+	return aux;
 }
 
-void AVLResidente::recorrerYSumarSaldos(Node* current, float& totalDeudas) {
-    if (current == nullptr) {
-        return;
-    }
-
-    // Recorre primero el subárbol izquierdo
-    recorrerYSumarSaldos(current->left, totalDeudas);
-
-    // Luego, verifica si el saldo del residente es positivo y suma al total
-    if (current->value->getSaldoAPagar() > 0) {
-        totalDeudas += current->value->getSaldoAPagar();
-    }
-
-    // Finalmente, recorre el subárbol derecho
-    recorrerYSumarSaldos(current->right, totalDeudas);
+Residente* BSTResidente::getResidente(int numCasa) {
+	return buscarResidente(root, numCasa);
 }
 
-float AVLResidente::calcularDeuda() {
-    float totalDeudas = 0;
-    recorrerYSumarSaldos(root, totalDeudas);
-    return totalDeudas;
-}
-
-Residente* AVLResidente::getResidente(int numCasa) {
-	if (root != 0) {
-		if (root->find(numCasa)) {
-			return root->value;
+Residente* BSTResidente::buscarResidente(Node *r, int numCasa) {
+	if (r != 0) {
+		if (r->residente->getNumCasa() == numCasa) {
+			return r->residente;
+		} else if (numCasa < r->residente->getNumCasa()) {
+			return buscarResidente(r->left, numCasa);
+		} else if (numCasa > r->residente->getNumCasa()) {
+			return buscarResidente(r->right, numCasa);
 		}
 	}
-	return 0;
 }
-
 
 #endif
