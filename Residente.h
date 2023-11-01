@@ -66,6 +66,8 @@ class Residente{
  *
  * @param
  * @return Objeto de tipo Residente
+ * 
+ * 
  */
 Residente::Residente(){
     numCasa = 0;

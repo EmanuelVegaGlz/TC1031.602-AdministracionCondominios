@@ -72,7 +72,7 @@ int main(){
             campos.push_back(campo);
         }
 
-        if (campos.size() >= 5) {
+        if (campos.size() >= 4) {
             try {
                 // Convierte los campos necesarios al tipo adecuado
                 int numCasa = stoi(campos[0]);
@@ -90,7 +90,7 @@ int main(){
             }
         }
     }
-        archivoCSV.close();
+    archivoCSV.close();
 
     
     // Estrucutra de datos de tipo BST
@@ -159,7 +159,9 @@ string contact;
                     getline(cin, contact);
                     cout << "Saldo (Solo numero): ";
                     cin >> saldo;
-                    admin.agregarResidente(new Residente(numCasa, prop, contact, saldo));
+                    Residente *nuevoResidente = new Residente(numCasa, prop, contact, saldo);
+                    admin.agregarResidente(nuevoResidente);
+                    residentesVector.push_back(nuevoResidente);
 
                     cout << "Residente agregado con exito!" << endl;
 
@@ -224,6 +226,24 @@ string contact;
         cin >> opcion;
         admin.formatoImpresion();
     }
+
+    // Guarda los datos de los residentes en un archivo CSV
+
+    ofstream archivoSalida("residentes.csv");
+    if (!archivoSalida) {
+        cerr << "No se pudo abrir el archivo de salida." << endl;
+        return 0;
+    }
+
+    for (int i = 0; i < residentesVector.size(); i++) {
+        Residente *residente = residentesVector[i];
+        archivoSalida << residente->getNumCasa() << ","
+                      << residente->getPropietario() << ","
+                      << residente->getContacto() << ","
+                      << residente->getSaldoAPagar() << endl;
+    }
+
+    archivoSalida.close();
 
     return 0;
 };
