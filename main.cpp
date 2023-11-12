@@ -19,10 +19,7 @@
 #include <algorithm>
 #include <fstream>
 
-
-
 using namespace std;
-
 
 /**
  * Funcion que valida que la opcion ingresada por el usuario este dentro de los parametros
@@ -32,6 +29,10 @@ using namespace std;
  * @param max: valor maximo que puede tener la opcion
  * 
  * @return opcion: opcion validada
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
  */
 int validaOpcion(int opcion, int min, int max){
     while(opcion < min || opcion > max){
@@ -93,10 +94,22 @@ int main(){
     archivoCSV.close();
 
     
-    // Estrucutra de datos de tipo BST
+    /*
+     * Creacion de objetos de tipo BSTResidente
+     * 
+     * Complejidad espacial: O(n)
+     * Complejidad temporal: O(n)
+     * 
+     */
     BSTResidente *propietariosArbol = new BSTResidente(residentesVector);
 
-    // Creacion de objetos de tipo Administracion
+    /*
+     * Creacion de objeto de tipo Administracion
+     * 
+     * Complejidad espacial: O(1)
+     * Complejidad temporal: O(1)
+     * 
+     */
     Administracion admin = Administracion(instalaciones, propietariosArbol, 0);
     admin.setDeudas();
     admin.formatoImpresion();

@@ -42,11 +42,43 @@ public:
     friend class BSTResidente;
 };
 
+/**
+ * Constructor por default
+ * 
+ * @param *resi Residente
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(1)
+ * 
+ */
 Node::Node(Residente *resi) : residente(resi), left(0), right(0) {}
 
+/**
+ * Constructor con parámetros
+ * 
+ * @param *resi Residente
+ * @param *le Nodo izquierdo
+ * @param *ri Nodo derecho
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(1)
+ * 
+ */
 Node::Node(Residente *resi, Node *le, Node *ri)
     : residente(resi), left(le), right(ri) {}
 
+/**
+ * Método para agregar un residente al árbol
+ * 
+ * @param *residenteNuevo Residente
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::add(Residente *residenteNuevo) {
     if (residenteNuevo->getNumCasa() < residente->getNumCasa()) {
         if (left != 0) {
@@ -63,6 +95,17 @@ void Node::add(Residente *residenteNuevo) {
     }
 }
 
+/**
+ * Método para agregar un residente al árbol
+ * 
+ * @param *&root Nodo raíz
+ * @param *resi Residente
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::add(Node*& root, Residente *resi) {
 	 if (root == 0) {
         root = new Node(resi);
@@ -73,6 +116,16 @@ void Node::add(Node*& root, Residente *resi) {
     }
 }
 
+/**
+ * Método para buscar un residente en el árbol
+ * 
+ * @param numCasa Número de casa
+ * @return bool
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 bool Node::find(int numCasa) {
     if (numCasa == residente->getNumCasa()) {
         return true;
@@ -83,6 +136,16 @@ bool Node::find(int numCasa) {
     }
 }
 
+/**
+ * Método para encontrar el sucesor de un nodo
+ * 
+ * @param
+ * @return Node
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 Node* Node::succesor() {
 	Node *le, *ri;
 
@@ -114,6 +177,16 @@ Node* Node::succesor() {
 	return child;
 }
 
+/**
+ * Método para eliminar un residente del árbol
+ * 
+ * @param *residenteBorrar Residente
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::remove(Residente *residenteBorrar) {
 	Node *succ, *old;
 	if (residenteBorrar->getNumCasa() < residente->getNumCasa()) {
@@ -149,6 +222,16 @@ void Node::remove(Residente *residenteBorrar) {
 	}
 }
 
+/**
+ * Método para eliminar los hijos de un nodo
+ * 
+ * @param
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::removeChilds() {
     if (left != 0) {
         left->removeChilds();
@@ -162,6 +245,16 @@ void Node::removeChilds() {
     }
 }
 
+/**
+ * Método para recorrer el árbol en orden
+ * 
+ * @param aux stringstream
+ * @return
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::inorder(stringstream &aux) const {
     if (left != 0) {
         left->inorder(aux);
@@ -179,8 +272,16 @@ void Node::inorder(stringstream &aux) const {
     }
 }
 
-
-
+/**
+ * Método para recorrer el árbol en orden
+ * 
+ * @param aux stringstream
+ * @return
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::inorderSaldo(stringstream &aux) const {
     if (left != 0) {
         left->inorderSaldo(aux);
@@ -198,6 +299,16 @@ void Node::inorderSaldo(stringstream &aux) const {
     }
 }
 
+/**
+ * Método para recorrer el árbol en preorden
+ * 
+ * @param aux stringstream
+ * @return
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::preorder(stringstream &aux) const {
     aux << residente->getNumCasa();
     if (left != 0) {
@@ -210,12 +321,35 @@ void Node::preorder(stringstream &aux) const {
     }
 }
 
+/**
+ * Método para convertir un vector en un árbol
+ * 
+ * @param residentes vector<Residente*>
+ * @return Node
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 Node* Node::sortedArrayToBST(vector<Residente*>& residentes) {
     Node* root = NULL;
     addVector(root, residentes, 0, residentes.size() - 1);
     return root;
 }
 
+/**
+ * Método para agregar un vector al árbol
+ * 
+ * @param *&root Nodo raíz
+ * @param residentes vector<Residente*>
+ * @param start int
+ * @param end int
+ * @return
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void Node::addVector(Node*& root, vector<Residente*>& residentes, int start, int end) {
     if (start > end) {
         return;
@@ -225,6 +359,7 @@ void Node::addVector(Node*& root, vector<Residente*>& residentes, int start, int
     addVector(root, residentes, start, mid - 1);
     addVector(root, residentes, mid + 1, end);
 }
+
 
 class BSTResidente {
 private:
@@ -247,21 +382,70 @@ public:
 	Residente* buscarResidente(Node *, int);
 };
 
+/**
+ * Constructor por default
+ * 
+ * @param
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(1)
+ * 
+ */
 BSTResidente::BSTResidente() : root(0) {}
 
+/**
+ * Constructor con parámetros
+ * 
+ * @param residentes vector<Residente*>
+ * @return
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 BSTResidente::BSTResidente(vector<Residente*> residentes) {
 	root = root->sortedArrayToBST(residentes);
 }
 
+/**
+ * Destructor
+ * 
+ * @param
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(1)
+ * 
+ */
 BSTResidente::~BSTResidente() {
     removeAll();
 }
 
-
+/**
+ * Método para verificar si el árbol está vacío
+ * 
+ * @param
+ * @return bool
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(1)
+ * 
+ */
 bool BSTResidente::empty() const {
     return (root == 0);
 }
 
+/**
+ * Método para agregar un residente al árbol
+ * 
+ * @param *nuevoResidente Residente
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void BSTResidente::add(Residente *nuevoResidente) {
     if (root != 0) {
 		root->add(nuevoResidente);
@@ -270,6 +454,16 @@ void BSTResidente::add(Residente *nuevoResidente) {
 	}
 }
 
+/**
+ * Método para eliminar un residente del árbol
+ * 
+ * @param *residenteDelete Residente
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void BSTResidente::remove(Residente *residenteDelete) {
     if (root != 0) {
         if (residenteDelete->getNumCasa() == root->residente->getNumCasa()) {
@@ -286,6 +480,16 @@ void BSTResidente::remove(Residente *residenteDelete) {
     }
 }
 
+/**
+ * Método para eliminar todos los residentes del árbol
+ * 
+ * @param
+ * @return
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 void BSTResidente::removeAll() {
     if (root != 0) {
         root->removeChilds();
@@ -294,6 +498,16 @@ void BSTResidente::removeAll() {
     root = 0;
 }
 
+/**
+ * Método para buscar un residente en el árbol
+ * 
+ * @param numCasa Número de casa
+ * @return bool
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 bool BSTResidente::find(int numCasa) const {
     if (root != 0) {
         return root->find(numCasa);
@@ -302,6 +516,16 @@ bool BSTResidente::find(int numCasa) const {
     }
 }
 
+/**
+ * Método para recorrer el árbol en orden
+ * 
+ * @param
+ * @return string
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 string BSTResidente::inorder() const {
     stringstream aux;
     aux << "";
@@ -312,6 +536,16 @@ string BSTResidente::inorder() const {
     return aux.str();
 }
 
+/**
+ * Método para recorrer el árbol en preorden
+ * 
+ * @param
+ * @return string
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 string BSTResidente::preorder() const {
     stringstream aux;
     aux << "";
@@ -322,11 +556,32 @@ string BSTResidente::preorder() const {
     return aux.str();
 }
 
+/**
+ * Método para calcular la deuda de todos los residentes
+ * 
+ * @param
+ * @return float
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 float BSTResidente::deudasResidentes() {
 	float aux = 0;
 	return auxDeudas(root, aux);
 }
 
+/**
+ * Método auxiliar para calcular la deuda de todos los residentes
+ * 
+ * @param *r Nodo raíz
+ * @param &aux float
+ * @return float
+ * 
+ * Complejidad espacial: O(n)
+ * Complejidad temporal: O(n)
+ * 
+ */
 float BSTResidente::auxDeudas(Node *r, float &aux) {
 	if (r != 0) {
 		auxDeudas(r->left, aux);
@@ -336,10 +591,31 @@ float BSTResidente::auxDeudas(Node *r, float &aux) {
 	return aux;
 }
 
+/**
+ * Método para obtener un residente del árbol
+ * 
+ * @param numCasa Número de casa
+ * @return Residente
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 Residente* BSTResidente::getResidente(int numCasa) {
 	return buscarResidente(root, numCasa);
 }
 
+/**
+ * Método para buscar un residente en el árbol
+ * 
+ * @param *r Nodo raíz
+ * @param numCasa Número de casa
+ * @return Residente
+ * 
+ * Complejidad espacial: O(1)
+ * Complejidad temporal: O(n)
+ * 
+ */
 Residente* BSTResidente::buscarResidente(Node *r, int numCasa) {
 	if (r != 0) {
 		if (r->residente->getNumCasa() == numCasa) {
