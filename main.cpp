@@ -29,10 +29,6 @@ using namespace std;
  * @param max: valor maximo que puede tener la opcion
  * 
  * @return opcion: opcion validada
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(n)
- * 
  */
 int validaOpcion(int opcion, int min, int max){
     while(opcion < min || opcion > max){
@@ -40,6 +36,27 @@ int validaOpcion(int opcion, int min, int max){
         cin >> opcion;
     }
     return opcion;
+}
+
+/**
+ * Funion ordenar residentes por casa con Selection Sort
+ * 
+ * @param
+ * @return
+ */
+void selectionSortCasa(vector<Residente*> &res){
+    int pos;
+    for (int i = res.size() - 1; i > 0; i--) {
+        pos = 0;
+        for (int j = 1; j <= i; j++) {
+            if (res[j]->getNumCasa() > res[pos]->getNumCasa()) {
+                pos = j;
+            }
+        }
+        if (pos != i) {
+            swap(res[i], res[pos]);
+        }
+    }
 }
 
 int main(){
@@ -93,23 +110,12 @@ int main(){
     }
     archivoCSV.close();
 
-    
-    /*
-     * Creacion de objetos de tipo BSTResidente
-     * 
-     * Complejidad espacial: O(n)
-     * Complejidad temporal: O(n)
-     * 
-     */
+    selectionSortCasa(residentesVector);
+
+    // Estrucutra de datos de tipo BST
     BSTResidente *propietariosArbol = new BSTResidente(residentesVector);
 
-    /*
-     * Creacion de objeto de tipo Administracion
-     * 
-     * Complejidad espacial: O(1)
-     * Complejidad temporal: O(1)
-     * 
-     */
+    // Creacion de objetos de tipo Administracion
     Administracion admin = Administracion(instalaciones, propietariosArbol, 0);
     admin.setDeudas();
     admin.formatoImpresion();

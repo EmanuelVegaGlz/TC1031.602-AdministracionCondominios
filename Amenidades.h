@@ -55,10 +55,6 @@ class Amenidades{
  *
  * @param
  * @return Objeto de tipo Amenidades
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 Amenidades::Amenidades(){
     nombre = "";
@@ -72,10 +68,6 @@ Amenidades::Amenidades(){
  *
  * @param string nombre, vector<string> horarios, int capacidad
  * @return Objeto de tipo Amenidades
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 Amenidades::Amenidades(string nom, vector<string> hor){
     nombre = nom;
@@ -90,10 +82,6 @@ Amenidades::Amenidades(string nom, vector<string> hor){
  *
  * @param
  * @return string nombre
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Amenidades::getNombre(){
     return nombre;
@@ -104,10 +92,6 @@ string Amenidades::getNombre(){
  *
  * @param
  * @return int capacidad
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 int Amenidades::getCapacidad(){
     return capacidad;
@@ -118,10 +102,6 @@ int Amenidades::getCapacidad(){
  *
  * @param int i
  * @return int asistentes
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 int Amenidades::getAsistentes(int i){
     return asistentes[i];
@@ -132,10 +112,6 @@ int Amenidades::getAsistentes(int i){
  *
  * @param string nombre
  * @return
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Amenidades::setNombre(string nom){
     nombre = nom;
@@ -146,10 +122,6 @@ void Amenidades::setNombre(string nom){
  *
  * @param
  * @return
- * 
- * Compleidad espacial: O(n)
- * Complejidad temporal: O(n)
- * 
  */
 void Amenidades::horariosDisponibles(){
     cout << "Horarios disponibles: " << endl;
@@ -165,10 +137,6 @@ void Amenidades::horariosDisponibles(){
  *
  * @param
  * @return
- * 
- * Compleidad espacial: O(n)
- * Complejidad temporal: O(n)
- * 
  */
 void Amenidades::cambioDia(){
     for (int i = 0; i < reservaciones.size(); i++){
@@ -182,10 +150,6 @@ void Amenidades::cambioDia(){
  *
  * @param int i
  * @return int i
- * 
- * Compleidad espacial: O(n)
- * Complejidad temporal: O(n)
- * 
  */
 int Amenidades::validaHorario(int i){
     while (reservaciones[i] == true || i > horarios.size()){
@@ -201,10 +165,6 @@ return i;
  *
  * @param int asis
  * @return int asis
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 int Amenidades::validaCapacidad(int asis){
     while (asis > capacidad){
@@ -241,10 +201,6 @@ class Alberca : public Amenidades{
  *
  * @param
  * @return Objeto de tipo Alberca
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 Alberca::Alberca(){
     nombre = "Alberca";
@@ -264,10 +220,6 @@ Alberca::Alberca(){
  *
  * @param
  * @return int temperatura
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 int Alberca::getTemperatura(){
     return temperatura;
@@ -278,10 +230,6 @@ int Alberca::getTemperatura(){
  *
  * @param int temperatura
  * @return
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Alberca::setTemperatura(int temp){
     temperatura = temp;
@@ -292,10 +240,6 @@ void Alberca::setTemperatura(int temp){
  *
  * @param int index
  * @return
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Alberca::reservarHorario(int index, int asis){
     index = validaHorario(index);
@@ -329,10 +273,6 @@ class Gym : public Amenidades{
  *
  * @param
  * @return Objeto de tipo Gym
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 Gym::Gym(){
     nombre = "Gym";
@@ -350,10 +290,6 @@ Gym::Gym(){
  *
  * @param int index
  * @return
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Gym::reservarHorario(int index, int asis){
     index = validaHorario(index);
@@ -393,10 +329,6 @@ class Salon : public Amenidades{
  *
  * @param
  * @return Objeto de tipo Salon
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 Salon::Salon(){
     nombre = "Salon";
@@ -424,39 +356,15 @@ Salon::Salon(){
  *
  * @param
  * @return float costo
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 float Salon::getCosto(){
     return costo;
 }
 
-/**
- * Getter fecha
- *
- * @param
- * @return tm fecha
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
- */
 tm Salon::getFecha() {
     return fecha;
 }
 
-/**
- * Método ReservarHorario
- *
- * @param int horaInicio, int asis
- * @return
- * 
- * Compleidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
- */
 string Salon::reservarHorario(int horaInicio, int asis) {
     horaInicio = validaHorario(horaInicio);
     cout << "Favor de elegir el indice de la hora de fin (Solo numero): " << endl;

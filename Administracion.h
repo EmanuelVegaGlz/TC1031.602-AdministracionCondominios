@@ -59,9 +59,6 @@ class Administracion{
  *
  * @param
  * @return Objeto de tipo Administracion
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
  */
 Administracion::Administracion(){
     amenidad = {};
@@ -76,9 +73,6 @@ Administracion::Administracion(){
  * @param vector<Amenidades*> amen
  * @param AVL<Residente*> resi
  * @return Objeto de tipo Administracion
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
  */
 Administracion::Administracion(vector<Amenidades*> amen, BSTResidente *resi, float pres){
     amenidad = amen;
@@ -92,10 +86,6 @@ Administracion::Administracion(vector<Amenidades*> amen, BSTResidente *resi, flo
  *
  * @param Amenidades* amenidad
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Administracion::agregarAmenidad(Amenidades* ameni){
     amenidad.push_back(ameni);
@@ -106,10 +96,6 @@ void Administracion::agregarAmenidad(Amenidades* ameni){
  *
  * @param Residente* residente
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Administracion::agregarResidente(Residente * resi){
     residente->add(resi);
@@ -120,10 +106,6 @@ void Administracion::agregarResidente(Residente * resi){
  *
  * @param
  * @return float deudasResidentes
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 float Administracion::getDeudas(){
     return deudasResidentes;
@@ -134,10 +116,6 @@ float Administracion::getDeudas(){
  *
  * @param
  * @return float presupuesto
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 float Administracion::getPresupuesto(){
     return presupuesto;
@@ -148,10 +126,6 @@ float Administracion::getPresupuesto(){
  *
  * @param
  * @return BSTResidente residente
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 BSTResidente Administracion::getResidentes(){
     return *residente;
@@ -162,10 +136,6 @@ BSTResidente Administracion::getResidentes(){
  *
  * @param
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Administracion::setDeudas(){
     deudasResidentes = residente->deudasResidentes();
@@ -176,10 +146,6 @@ void Administracion::setDeudas(){
  * 
  * @param
  * @return string inorderPorCasa
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Administracion::ordenarResidentesCasa() {
     return residente->inorder();
@@ -194,10 +160,6 @@ string Administracion::ordenarResidentesCasa() {
  * @param int iHorario
  * @param int asis
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Administracion::reservarAmenidad(int numCasa, int iAm){
     if(residente->find(numCasa) == false){
@@ -237,10 +199,6 @@ void Administracion::reservarAmenidad(int numCasa, int iAm){
  * @param int numCasa
  * @param float pago
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Administracion::pagarSaldo(int numCasa, float pago){
     if(residente->find(numCasa) == false){
@@ -257,10 +215,6 @@ void Administracion::pagarSaldo(int numCasa, float pago){
  *
  * @param int numCasa
  * @return bool
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 bool Administracion::buscarResidente(int numCasa){
     return residente->find(numCasa);
@@ -271,10 +225,6 @@ bool Administracion::buscarResidente(int numCasa){
  *
  * @param
  * @return
- * 
- * Complejidad espacial: O(n)
- * Complejidad temporal: O(n)
- * 
  */
 void Administracion::imprimirAmenidades(){
     for (int i = 0; i < amenidad.size(); i++){
@@ -287,10 +237,6 @@ void Administracion::imprimirAmenidades(){
  *
  * @param int Casa
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Administracion::imprimirResidentes(int casa){
     if(residente->find(casa) == false){
@@ -314,9 +260,6 @@ void Administracion::imprimirResidentes(int casa){
  *
  * @param int i
  * @return
- * 
- * Complejidad espacial: O(n)
- * Complejidad temporal: O(n)
  */
 void Administracion::imprimirReservacionesResidente(int casa){
     if(residente->find(casa) == false){
@@ -333,9 +276,6 @@ void Administracion::imprimirReservacionesResidente(int casa){
  *
  * @param
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
  */
 void Administracion::formatoImpresion(){
     cout << "--------------------------------------------------------"<< endl;

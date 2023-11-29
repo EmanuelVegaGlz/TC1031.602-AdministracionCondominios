@@ -1,9 +1,9 @@
-1,Juan Perez,55-1234-5678,0
-2,Maria Garcia,55-2345-6789,0
-3,Jose Lopez,55-3456-7890,0
-4,Ana Rodriguez,55-4567-8901,0
-5,Luis Martinez,55-5678-9012,0
-6,Laura Sanchez,55-6789-0123,0
+1,Juan Perez,55-1234-5678,2000
+2,Maria Garcia,55-2345-6789,5677
+3,Jose Lopez,55-3456-7890,-8000
+4,Ana Rodriguez,55-4567-8901,120
+5,Luis Martinez,55-5678-9012,500
+6,Laura Sanchez,55-6789-0123,600
 7,Pedro Gonzalez,55-7890-1234,0
 8,Carmen Rios,55-8901-2345,0
 9,Diego Ramirez,55-9012-3456,0
@@ -98,3 +98,6 @@
 98,Gabriela Nunez,55-5432-6543,0
 99,Javier Mendoza,55-7654-6543,0
 100,Ximena Salas,55-5432-5432,0
+101,Jose Lopez,322222,22
+102,Diego Cheese,222,45
+103,Jorge Rojas,442 667 8976,5000

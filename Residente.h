@@ -17,6 +17,8 @@
 #include <vector>
 using namespace std;
 
+
+
 class Residente{
 
     private:
@@ -65,8 +67,6 @@ class Residente{
  * @param
  * @return Objeto de tipo Residente
  * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
  * 
  */
 Residente::Residente(){
@@ -82,10 +82,6 @@ Residente::Residente(){
  *
  * @param Residente* r
  * @return Objeto de tipo Residente
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 Residente::Residente(Residente* r){
     numCasa = r->numCasa;
@@ -100,10 +96,6 @@ Residente::Residente(Residente* r){
  *
  * @param num, prop, cont, sal
  * @return Objeto de tipo Residente
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 Residente::Residente(int num, string prop, string cont, float sal){
     numCasa = num;
@@ -118,10 +110,6 @@ Residente::Residente(int num, string prop, string cont, float sal){
  *
  * @param
  * @return string nombre
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Residente::getNombre(){
     return propietario;
@@ -132,10 +120,6 @@ string Residente::getNombre(){
  *
  * @param
  * @return int numCasa
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 int Residente::getNumCasa(){
     return numCasa;
@@ -146,10 +130,6 @@ int Residente::getNumCasa(){
  *
  * @param
  * @return string propietario
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Residente::getPropietario(){
     return propietario;
@@ -160,10 +140,6 @@ string Residente::getPropietario(){
  *
  * @param
  * @return string contacto
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Residente::getContacto(){
     return contacto;
@@ -174,10 +150,6 @@ string Residente::getContacto(){
  *
  * @param
  * @return float saldo
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 float Residente::getSaldoAPagar(){
     return saldoAPagar;
@@ -188,10 +160,6 @@ float Residente::getSaldoAPagar(){
  *
  * @param int i
  * @return string amenidadesReservadas
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 string Residente::getAmenidadesReservadas(int i){
     return amenidadesReservadas[i];
@@ -202,10 +170,6 @@ string Residente::getAmenidadesReservadas(int i){
  *
  * @param
  * @return int tamAmenidadesReservadas
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 int Residente::getTamAmenidadesReservadas(){
     return amenidadesReservadas.size();
@@ -216,10 +180,6 @@ int Residente::getTamAmenidadesReservadas(){
  *
  * @param string cont
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Residente::setContacto(string cont){
     contacto = cont;
@@ -231,10 +191,6 @@ void Residente::setContacto(string cont){
  *
  * @param string amenidad
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Residente::setAmenidadesReservadas(string amenidad){
     amenidadesReservadas.push_back(amenidad);
@@ -245,10 +201,6 @@ void Residente::setAmenidadesReservadas(string amenidad){
  *
  * @param int num
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Residente::setNumCasa(int num){
     numCasa = num;
@@ -259,10 +211,6 @@ void Residente::setNumCasa(int num){
  *
  * @param
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Residente::pagarSaldo(float pag){
     saldoAPagar -= pag;
@@ -273,10 +221,6 @@ void Residente::pagarSaldo(float pag){
  *
  * @param
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Residente::hacerCargo(float sal){
     saldoAPagar += sal;
@@ -287,10 +231,6 @@ void Residente::hacerCargo(float sal){
  *
  * @param
  * @return
- * 
- * Complejidad espacial: O(n)
- * Complejidad temporal: O(n)
- * 
  */
 void Residente::imprimirReservaciones(){
     for(int i = 0; i < amenidadesReservadas.size(); i++){
@@ -303,10 +243,6 @@ void Residente::imprimirReservaciones(){
  *
  * @param
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Residente::imprimirSaldo(){
     cout << "Saldo a actual: " << saldoAPagar << endl;
@@ -317,10 +253,6 @@ void Residente::imprimirSaldo(){
  *
  * @param int i
  * @return
- * 
- * Complejidad espacial: O(1)
- * Complejidad temporal: O(1)
- * 
  */
 void Residente::imprimirAmenidadesReservadas(int i){
     cout << amenidadesReservadas[i] << endl;
