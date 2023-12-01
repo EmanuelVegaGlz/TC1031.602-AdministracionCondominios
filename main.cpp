@@ -39,24 +39,77 @@ int validaOpcion(int opcion, int min, int max){
 }
 
 /**
- * Funion ordenar residentes por casa con Selection Sort
- * 
- * @param
- * @return
+ * Función para combinar dos subarrays del vector res
+ * El primer subarray es res[l..m]
+ * El segundo subarray es res[m+1..r]
  */
-void selectionSortCasa(vector<Residente*> &res){
-    int pos;
-    for (int i = res.size() - 1; i > 0; i--) {
-        pos = 0;
-        for (int j = 1; j <= i; j++) {
-            if (res[j]->getNumCasa() > res[pos]->getNumCasa()) {
-                pos = j;
-            }
+void merge(vector<Residente*> &res, int l, int m, int r) {
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    // Crear arrays temporales
+    vector<Residente*> left(n1);
+    vector<Residente*> right(n2);
+
+    // Copiar datos a los arrays temporales left[] y right[]
+    for (int i = 0; i < n1; i++)
+        left[i] = res[l + i];
+    for (int j = 0; j < n2; j++)
+        right[j] = res[m + 1 + j];
+
+    // Combinar los arrays temporales de nuevo en res[l..r]
+    int i = 0; // Índice inicial del primer subarray
+    int j = 0; // Índice inicial del segundo subarray
+    int k = l; // Índice inicial del array combinado
+    while (i < n1 && j < n2) {
+        if (left[i]->getNumCasa() <= right[j]->getNumCasa()) {
+            res[k] = left[i];
+            i++;
+        } else {
+            res[k] = right[j];
+            j++;
         }
-        if (pos != i) {
-            swap(res[i], res[pos]);
-        }
+        k++;
     }
+
+    // Copiar elementos restantes de left[], si hay alguno
+    while (i < n1) {
+        res[k] = left[i];
+        i++;
+        k++;
+    }
+
+    // Copiar elementos restantes de right[], si hay alguno
+    while (j < n2) {
+        res[k] = right[j];
+        j++;
+        k++;
+    }
+}
+
+/**
+ * Función principal que implementa Merge Sort
+ * @param res: vector de residentes a ordenar
+ * @param l: índice izquierdo
+ * @param r: índice derecho
+ */
+void mergeSortCasa(vector<Residente*> &res, int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+
+        // Ordenar las dos mitades
+        mergeSortCasa(res, l, m);
+        mergeSortCasa(res, m + 1, r);
+
+        // Combinar las mitades ordenadas
+        merge(res, l, m, r);
+    }
+}
+
+// Función para llamar al Merge Sort
+void sortResidentesPorCasa(vector<Residente*> &res) {
+    int n = res.size();
+    mergeSortCasa(res, 0, n - 1);
 }
 
 int main(){
@@ -79,7 +132,7 @@ int main(){
     }
 
     string linea;
-    // Lee y procesa cada línea del archivo CSV
+    // Lee y procesa cada línea del archivo CSV (O(N))
     while (getline(archivoCSV, linea)) {
         istringstream ss(linea);
         string campo;
@@ -109,10 +162,11 @@ int main(){
         }
     }
     archivoCSV.close();
+    
+    // O(N log N)
+    sortResidentesPorCasa(residentesVector);
 
-    selectionSortCasa(residentesVector);
-
-    // Estrucutra de datos de tipo BST
+    // Estrucutra de datos de tipo BST O(N)
     BSTResidente *propietariosArbol = new BSTResidente(residentesVector);
 
     // Creacion de objetos de tipo Administracion

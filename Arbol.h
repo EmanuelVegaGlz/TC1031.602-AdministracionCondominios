@@ -5,11 +5,11 @@
  * Nombre: Emanuel Josué Vega González.
  * ID: A01710366.
  *
- * Clase AVLResidentes (Estructura de datos principal)  
+ * Clase BSTesidentes (Estructura de datos principal)  
  */
 
-#ifndef AVLRESIDENTES_H_
-#define AVLRESIDENTES_H_
+#ifndef BSTResidentes_h
+#define BSTResidentes_h
 
 #include <string>
 #include <sstream>
@@ -81,6 +81,7 @@ bool Node::find(int numCasa) {
     } else if (numCasa > residente->getNumCasa()) {
         return (right != 0 && right->find(numCasa));
     }
+    return false;
 }
 
 Node* Node::succesor() {
@@ -297,9 +298,8 @@ void BSTResidente::removeAll() {
 bool BSTResidente::find(int numCasa) const {
     if (root != 0) {
         return root->find(numCasa);
-    } else {
-        return false;
     }
+        return false;
 }
 
 string BSTResidente::inorder() const {
@@ -350,6 +350,7 @@ Residente* BSTResidente::buscarResidente(Node *r, int numCasa) {
 			return buscarResidente(r->right, numCasa);
 		}
 	}
+    return 0;
 }
 
 #endif
