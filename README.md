@@ -6,13 +6,17 @@
 #### ID: A01710366
 
 El objetivo de este programa es solucionar un problema en un condominio, lo que se trata de solucionar es tener un sistema en el cual se puedan hacer reservaciones de las amenidades y que las personas que tienen atrasos en pagos de mantenimiento o multas no puedan hacer reservaciones. Posteriormente en futuros avances se planea incluir temas de gestión de proveedores y de pagos, así como seguimiento de facturas mes a mes. En este avance se incluye un archivo *.csv* en el que se incluyen a los 100 residentes del condominio.
+# Correcciones
+
+Se implementó un algoritmo de ordenamiento más eficiente (Merge sort), en el main para ordenar el vector de Residentes antes de que sean ingresados a la estructura de datos principal.
+
 # Competencias
 ## SICT0301: Evalúa los componentes
 
 **Hace un análisis de complejidad correcto y completo para los algoritmos de ordenamiento usados en el programa.**
-#### Selection Sort
+#### Merge Sort
 
-- **Peor Caso**: O(n^2)
+- **Peor Caso**: O(N Log N)
 
 #### Búsqueda Binaria
 
@@ -68,6 +72,10 @@ Justificación: Para calcular la suma de las deudas de todos los residentes se t
 -	Complejidad de tiempo: O(log(n))
 -	Complejidad de espacio: O(log(n))
 Justificación: Buscar un residente por número de casa implica seguir un camino de búsqueda logarítmico en el árbol.
+
+**Hace un análisis de complejidad correcto y completo para todos los demás componentes del programa y determina la complejidad final del programa.**
+
+La complejidad final del programa es O(N Log N) esto es debido a que en el menú los métodos de la clase Administracion se encuentran con complejidades logarítmicas o lineales, en cambio fuera del menú el uso del Merge Sort es la complejidad más significativa.
 
 ## SICT0302: Toma decisiones
 
